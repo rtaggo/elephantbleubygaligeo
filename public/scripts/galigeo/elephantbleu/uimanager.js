@@ -29,7 +29,6 @@
         },
         */
         swipeStatus: function(event, phase, direction, distance, duration, fingers, fingerData, currentDirection) {
-          console.log('fingerData: ' + JSON.stringify(fingerData[0]));
           if (phase !== "cancel" && phase !== "end") {
             if (fingerData[0].end.y < (self._viewSize.height - 20)) {
               var tempCardHeight = (self._viewSize.height - fingerData[0].end.y);

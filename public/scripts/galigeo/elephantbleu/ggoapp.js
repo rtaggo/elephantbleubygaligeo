@@ -8,13 +8,25 @@
   GGO.GGOApp.prototype = {
     _init: function() {
       var self = this;
+
       var modulesOptions = {
         app: this
       };
+
+      var docURL = new URL(document.URL);
+      var search_params = new URLSearchParams(docURL.search);
+      modulesOptions.userLocated  = search_params.has('lat') && search_params.has('lng');
+      if (modulesOptions.userLocated) {
+        modulesOptions.userLocation = {
+          lat : parseFloat(search_params.get('lat')),
+          lng : parseFloat(search_params.get('lng')),
+        }
+      }
       this._uiManager = new GGO.UIManager(modulesOptions);
+
+      this._mapManager = new GGO.MapManager(modulesOptions);
       /*
       this._dataManager = new GGO.DataManager(modulesOptions);
-      this._mapManager = new GGO.MapManager(modulesOptions);
       this._uiManager = new GGO.UIManager(modulesOptions);
       this._sireneExplorer = new GGO.SireneExplorer(modulesOptions);
       this._posAnalyzer = new GGO.POSAnalyzer(modulesOptions);
@@ -41,11 +53,16 @@
       });
     },
     handleWakeupApp: function(data) {
+      var self = this;
       if (data.code === 200) {
         setTimeout(function(e){
           $('#appLauncher').fadeOut(1000, function(e){
             console.log('fade out completed');
             $('#mainAppContainer').removeClass('slds-hide');
+            GGO.EventBus.dispatch(GGO.EVENTS.APPISREADY);
+
+            $('#map').show();
+            self._mapManager.invalidateMapSize();
           });
         }, 3000);
       }
