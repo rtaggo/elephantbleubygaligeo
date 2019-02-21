@@ -4,6 +4,9 @@ const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser');
 
+
+const config = require('./config');
+
 const PORT = process.env.PORT || 5000
 
 const app = express();
@@ -23,6 +26,12 @@ app.get('/mobile', (req, res) => {
   res.sendFile(path.join(__dirname, '/views/mobile.html'));
 });
 
+
+// ELEPHANTBLEU SERVICES
+app.use('/services/rest/elephantbleu', require('./api/elephantbleu/api'));
+
+// GEOSERVICE
+app.use('/services/rest/geoservice', require('./api/geoservice/api'));
 
 
 // Basic 404 handler

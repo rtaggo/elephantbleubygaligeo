@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "body-parser": "^1.18.3",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "nconf": "^0.10.0",
+    "request-promise": "^4.2.4"
   },
   "devDependencies": {},
   "repository": {
