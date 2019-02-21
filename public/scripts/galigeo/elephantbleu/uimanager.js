@@ -45,7 +45,7 @@
     },
     _handleSwipeUpDownEnd: function(direction, data) {
 
-    }
+    },
     registerSwipes: function() {
       
     }
