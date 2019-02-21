@@ -29,6 +29,11 @@ html,body {
   width: 200px;
 }
 
+.top-right_container {
+  position: absolute;
+    right: 5px;
+    top: 5px;
+}
 
 .bottom-card {
   position: absolute !important;
