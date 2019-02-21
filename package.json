@@ -1,7 +1,7 @@
 {
-  "name": "node-js-getting-started",
+  "name": "elephantbleubygaligeo",
   "version": "0.3.0",
-  "description": "A sample Node.js app using Express 4",
+  "description": "Elephant Bleu app powered by Galigeo",
   "engines": {
     "node": "10.x"
   },
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/heroku/node-js-getting-started"
+    "url": "https://github.com/rtaggo/elephantbleubygaligeo.git"
   },
   "keywords": [
     "node",
