@@ -149,7 +149,16 @@
 			this._map.on('locationerror', onLocationError);
 		},
 		locateUser: function() {
-			this._map.locate({setView: true, maxZoom: 14,enableHighAccuracy: true});
+      if (this._options.userLocated){
+        var dataLoc = {
+          latlng : this._options.userLocation,
+          accuracy: 10
+        };
+        this.handleUserLocationFound(dataLoc);
+        this._map.setView(dataLoc.latlng,13);
+      } else {
+        this._map.locate({setView: true, maxZoom: 14,enableHighAccuracy: true});
+      }
 		},
 		handleUserLocationFound: function(e) {
 			console.log('>> handleUserLocationFound', e);
@@ -173,7 +182,7 @@
 		handleUserLocationError: function(e) {
 			console.log('>> handleUserLocationError', e);
 			this._userLocation.coordinates = {
-          		lat: 48.8535356452292,
+        lat: 48.8535356452292,
 				lng: 2.3482337594032288
 			};
 			this._userLocation.accuracy = 1;
