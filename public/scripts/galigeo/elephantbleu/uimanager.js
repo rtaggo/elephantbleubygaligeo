@@ -31,12 +31,13 @@
         swipeStatus: function(event, phase, direction, distance, duration, fingers, fingerData, currentDirection) {
           console.log('fingerData: ' + JSON.stringify(fingerData[0]));
           if (phase !== "cancel" && phase !== "end") {
-            var tempCardHeight = (self._viewSize.height - fingerData[0].end.y) + 'px';
-
-            $('#mainAppContainer .bottom-card').css('height', tempCardHeight);
+            if (fingerData[0].end.y < (self._viewSize.height - 20)) {
+              var tempCardHeight = (self._viewSize.height - fingerData[0].end.y);
+              $('#mainAppContainer .bottom-card').css('height', tempCardHeight);
+            } 
           } else if ( phase === "end") {
             console.log('ENDED fingerData: ' + JSON.stringify(fingerData[0]));
-            self._handleSwipeUpDownEnd(direction, fingerData[0].end);
+            self._handleSwipeUpDownEnd(direction, fingerData[0]);
           }
         },
         //Default is 75px, set to 0 for demo so any distance triggers swipe
@@ -44,7 +45,16 @@
       });
     },
     _handleSwipeUpDownEnd: function(direction, data) {
-
+      var self = this;
+      if ((data.end.y > (self._viewSize.halfHeight - self._viewSize.heightThreshold)) &&  (data.end.y < (self._viewSize.halfHeight + self._viewSize.heightThreshold))) {
+        $('#mainAppContainer .bottom-card').css('height', (self._viewSize.halfHeight +'px'));
+      } else {
+        if ((direction === 'up') && (data.end.y < (self._viewSize.halfHeight - self._viewSize.heightThreshold))) {
+          $('#mainAppContainer .bottom-card').css('height', (self._viewSize.height +'px'));
+        } else if ((direction === 'down') && (data.end.y > (self._viewSize.halfHeight + self._viewSize.heightThreshold))) {
+          $('#mainAppContainer .bottom-card').css('height', '20px');
+        }
+      }
     },
     registerSwipes: function() {
       
