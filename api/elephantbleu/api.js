@@ -17,7 +17,6 @@ router.get('/', (req, res, next) => {
 
 router.get('/stations', (req, res, next) => {
 	let stations = JSON.parse(fs.readFileSync('./data/elephantbleu.geojson'));
-	console.log(`stations: ${stations.length}`);
 	res.header('Content-Type', 'application/json'); 
 	res.json(stations); 
 });
