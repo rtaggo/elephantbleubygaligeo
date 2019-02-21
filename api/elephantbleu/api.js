@@ -11,7 +11,7 @@ router.use(bodyParser.json());
 
 router.get('/', (req, res, next) => {
 	res.header('Content-Type', 'application/json'); 
-	res.json({message: 'elephantbleu services are running ...'}); 
+	res.json({message: 'elephantbleu services are running ...', code:200}); 
 });
 
 

@@ -27,6 +27,11 @@ app.get('/mobile', (req, res) => {
 });
 
 
+// WAKEME UP SERVICES
+app.use('/services/wakeup', (req, res) =>{
+  res.json({message : 'alive', code:200}); 
+});
+
 // ELEPHANTBLEU SERVICES
 app.use('/services/rest/elephantbleu', require('./api/elephantbleu/api'));
 
