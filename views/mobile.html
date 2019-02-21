@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<script src="/scripts/vendors/jquery/jquery-3.3.1.min.js"></script>
 
 	<script type="module" src="/scripts/galigeo/elephantbleu/elephantbleu.js"></script>
@@ -8,15 +10,63 @@
 	<link rel="stylesheet" type="text/css" href="/scripts/vendors/mapbox/V3.1.1/mapbox.css" />
 
 	<script src='/scripts/vendors/turfjs/turf.min.js'></script>
+	<link rel="stylesheet" type="text/css" href="/styles/slds/assets/styles/salesforce-lightning-design-system-vf.css" />
+
+
+	<link rel="stylesheet" type="text/css" href="/styles/galigeo.css" />
+
 </head>
 <body>
-	<h4>Elephant bleu Mobile App Powered by Galigeo</h4>
-
-
+	<div class="eb-ggo">
+		<div id="appLauncher" class="slds-align_absolute-center appLogoLauncher" style="height: 400px;">
+			<div>
+				<img src='/images/elephant_bleu_by_galigeo_logo.png' style="display:block;"/> 
+				<div class="slds-text-heading_medium slds-m-around_x-small" style="text-align: center;">PDX Rocks !!!! :-)</div>
+				<div class="slds-m-around_x-small">
+					<div class="slds-align_absolute-center" style="height: 4rem;">
+						<div role="status" class="slds-spinner slds-spinner_medium slds-spinner_inline">
+							<span class="slds-assistive-text">Loading</span>
+							<div class="slds-spinner__dot-a"></div>
+							<div class="slds-spinner__dot-b"></div>
+						</div>
+						</div>
+				</div>
+			</div>
+		</div>
+		<div id="mainAppContainer" class="slds-hide">
+			<h4>Elephant bleu Mobile App Powered by Galigeo</h4>
+			<article class="slds-card bottom-card ">
+				<div class="slds-card__header slds-grid">
+					<header class="slds-media slds-media_center slds-has-flexi-truncate">
+					<div class="slds-media__figure">
+						<span class="slds-icon_container slds-icon-standard-account" title="account">
+						<svg class="slds-icon slds-icon_small" aria-hidden="true">
+						<use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#account"></use>
+						</svg>
+						<span class="slds-assistive-text">account</span>
+						</span>
+					</div>
+					<div class="slds-media__body">
+						<h2 class="slds-card__header-title">
+							<span>Accounts</span>
+						</h2>
+						</div>
+					</header>
+				</div>
+				<div class="slds-card__body slds-card__body_inner">Card Body</div>
+			</article>
+		</div>
+	</div>
+	
 	<script>
 		$(document).ready(function(e){
 			console.log(' >> document is ready');
-
+			setTimeout(function(e){
+				$('#appLauncher').fadeOut(1000, function(e){
+					console.log('fade out completed');
+					$('#mainAppContainer').removeClass('slds-hide');
+				});
+			}, 3000);
 			GGO.EventBus.dispatch(GGO.EVENTS.APPISREADY);
 		});
 	</script>

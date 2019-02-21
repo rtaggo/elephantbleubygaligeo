@@ -1,0 +1,38 @@
+@charset "UTF-8";
+html,body {
+  margin: 0px;
+  height: 100%;
+  overflow: hidden;
+}
+
+#map {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+.eb-ggo .mainContainer {
+  
+}
+
+.appLogoLauncher {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+}
+
+.appLogoLauncher img {
+  height: 400px;
+}
+
+
+.bottom-card {
+  position: absolute !important;
+  left: 0px !important;
+  right: 0px !important;
+  bottom: 0px !important;
+}
