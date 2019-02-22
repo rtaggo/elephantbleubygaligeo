@@ -25,6 +25,15 @@
       elephantbleu : {},
       concurrence: {}
     };
+
+    this._defaultEBIcon = {
+			iconUrl: '/images/logo_elephantbleu.png',
+			iconSize: [32, 32], // size of the icon
+			iconAnchor: [16, 16], // point of the icon which will correspond to marker's location
+			popupAnchor: [0, -16], // point from which the popup should open relative to the iconAnchor
+			className: 'dot'
+		};
+		
 		this.init();
 	};
 
@@ -54,14 +63,31 @@
 			GGO.EventBus.addEventListener(GGO.EVENTS.CLICKEDSTATION, function(e) {
 				var tgt = e.target;
 				console.log('Received GGO.EVENTS.CLICKEDSTATION', tgt);
-				self.routeToStation(tgt);
+				//self.routeToStation(tgt);
 			});
+			GGO.EventBus.addEventListener(GGO.EVENTS.ZOOMTOSTATION, function(e) {
+				var stationData = e.target;
+				console.log('Received GGO.EVENTS.ZOOMTOSTATION', stationData);
+				self.doZoomToStation(stationData);
+			});
+      // ZOOMTOSTATION
 
 			GGO.EventBus.addEventListener(GGO.EVENTS.FETCHEDSTATIONS, function(e) {
 				var data = e.target;
         console.log('Received GGO.EVENTS.FETCHEDSTATIONS', data);
         self.handleFetchedStationsResponse(data);
-			});
+      });
+    },
+    doZoomToStation: function(stationData){
+      var self = this;
+      if (stationData.layer === 'elephantbleu') {
+        this._stationLayers.elephantbleu.layer.eachLayer(function(lyr){
+          if (lyr.feature.properties.id === stationData.stationId) {
+            self._map.setView(lyr.getLatLng(),14);
+            return false;
+          }
+        });
+      }
     },
     handleFetchedStationsResponse: function(data){
       if (data.request_parameters.layer === 'elephantbleu') {
@@ -69,6 +95,7 @@
       }
     },
     handleEBStations: function(data){
+      var self = this;
       if ((typeof(this._stationLayers.elephantbleu.layer) !== 'undefined') && (this._stationLayers.elephantbleu.layer !== null)) {
         this._stationLayers.elephantbleu.layer.clearLayers();
       } else {
@@ -76,6 +103,9 @@
       }
       this._stationLayers.elephantbleu.geojson = data.geojson;
       this._stationLayers.elephantbleu.layer.setGeoJSON(this._stationLayers.elephantbleu.geojson);
+      this._stationLayers.elephantbleu.layer.eachLayer(function(lyr){
+        lyr.setIcon(L.icon(self._defaultIcon));
+      });
       GGO.EventBus.dispatch(GGO.EVENTS.RENDERSTATIONS, data);
     }, 
     handleConcurrenceStations: function(data){

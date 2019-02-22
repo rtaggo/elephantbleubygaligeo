@@ -7,7 +7,7 @@ const turf = require('@turf/turf');
 
 const router = express.Router();
 
-const maxRadiusFiltering = 70; // max radius in KM when results need to be filtered i.e when sending coordinates
+const maxRadiusFiltering = 30; // max radius in KM when results need to be filtered i.e when sending coordinates
 
 // Automatically parse request body as JSON
 router.use(bodyParser.json());
@@ -35,6 +35,9 @@ router.get('/stations', (req, res, next) => {
         }
     }));
     console.log(`Filtered has ${tstations.features.length} stations`);
+    tstations.features.sort(function(a, b){
+      return (a.properties.distance < b.properties.distance);
+    });
     stations = tstations;
   }
   res.header('Content-Type', 'application/json'); 

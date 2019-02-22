@@ -113,3 +113,31 @@ html,body {
 .layer_details.selected img {
   border: 2px solid #73cfff;
 }
+
+
+.station-title_container .station-distance {
+  font-size: 9px;
+  margin-left : 10px;
+}
+
+.station-title_container svg {
+  float: right;
+}
+
+.service-type {
+  width : 32%;
+  display : inline-block; 
+  font-size: 10px;
+  vertical-align: top;
+  padding: 2px;
+}
+
+.service-type img {
+  width : 20px;
+  float: left;
+}
+
+.service-type div {
+  margin-left: 25px;
+}
+

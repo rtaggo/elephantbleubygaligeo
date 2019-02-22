@@ -1,7 +1,15 @@
 (function() {
 	'use strict';
   GGO.UIManager = function(options) {
-		this._options = options || {};
+    this._options = options || {};
+    this._stations = {
+      elephantbleu : {
+
+      },
+      concurrence : {
+
+      }
+    };
 		this._init();
 	};
 
@@ -14,22 +22,30 @@
       this._viewSize.halfHeight = (this._viewSize.height/2);
       this._viewSize.thirdHeight = (this._viewSize.height/3);
       this._viewSize.heightThreshold = (this._viewSize.height/7);
-      this._setupListeners();
       $('#dataExplorerCard').css({
-        'height' : this._viewSize.thirdHeight + 'px',
-        'max-height' : this._viewSize.thirdHeight + 'px'
+        'max-height' : (this._viewSize.thirdHeight) + 'px'
       });
+      $('#dataExplorerCard .slds-card__body').css({
+        'height' :  (this._viewSize.thirdHeight-20) + 'px',
+        'max-height' :  (this._viewSize.thirdHeight-20) + 'px'
+      });
+      this._setupListeners();
     },
     _setupListeners: function() {
       var self = this;
-      $('#dataExplorerCard').swipe( {
+      $('#swiper_handle').swipe( {
         swipeStatus: function(event, phase, direction, distance, duration, fingers, fingerData, currentDirection) {
           if (phase !== "cancel" && phase !== "end") {
             if (fingerData[0].end.y < (self._viewSize.height - 20)) {
               var tempCardHeight = (self._viewSize.height - fingerData[0].end.y);
               $('#dataExplorerCard').css({
-                'height' : tempCardHeight,
-                'max-height' : tempCardHeight
+                'height': (tempCardHeight),
+                'max-height': (tempCardHeight),
+              });
+              tempCardHeight -= 20;
+              $('#dataExplorerCard .slds-card__body').css({
+                'height' : tempCardHeight + 'px',
+                'max-height' : tempCardHeight + 'px'
               });
             } 
             if (fingerData[0].end.y < (self._viewSize.halfHeight)) {
@@ -77,10 +93,21 @@
 			});
     },
     renderStations: function(data){
+      var self = this;    
       var ctnr = $('#elephantbleuStations_Container').empty();
       var theUL = $('<ul class="slds-has-dividers_bottom-space"></ul>');
+      this._stations.elephantbleu.stations = data.stations;
       $.each(data.stations, function(idx, val){
         theUL.append($('<li class="slds-item"></li>').append(val.renderHTML()));
+      });
+      theUL.find('.station-title_container .slds-icon').click(function(e){
+        var stationId = $(this).attr('data-stationid');
+        console.log('Click on icon to display information for station id = ' + stationId);
+      });
+      theUL.find('.station-title_container .station-title').click(function(e){
+        var stationId = $(this).attr('data-stationid');
+        console.log('Click on on title for station id = ' + stationId + ' ==> TODO: zoom to it');
+        GGO.EventBus.dispatch(GGO.EVENTS.ZOOMTOSTATION, {stationId: stationId, layer: 'elephantbleu'});
       });
       ctnr.append(theUL);
     },
@@ -92,13 +119,18 @@
           bCardHeight = (data.end.y < (this._viewSize.halfHeight - this._viewSize.heightThreshold)) ? this._viewSize.height : this._viewSize.thirdHeight;
           break;
         case 'down' : 
-          bCardHeight = (data.end.y > (this._viewSize.thirdHeight + this._viewSize.heightThreshold)) ? bCardHeight : this._viewSize.thirdHeight;
+          bCardHeight = (data.end.y > (this._viewSize.thirdHeight + 2*this._viewSize.heightThreshold)) ? bCardHeight : this._viewSize.thirdHeight;
           break;
         default:
           console.log('Direction \''+direction+'\' not supported');
           bCardHeight = this._viewSize.thirdHeight;
       }
       $('#dataExplorerCard').css({
+        'height' : bCardHeight + 'px',
+        'max-height' : bCardHeight + 'px'
+      });
+      bCardHeight -= 20;
+      $('#dataExplorerCard .slds-card__body').css({
         'height' : bCardHeight + 'px',
         'max-height' : bCardHeight + 'px'
       });
