@@ -138,7 +138,7 @@
       this._detailsPanel
         .append($('<div class="slds-panel__header"></div>')
           .append(backBtn)
-          .append($('<h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Station de lavage '+this._currentStation.getTitle()+'</h2>'))
+          .append($('<h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Station de '+this._currentStation.getTitle()+'</h2>'))
         );
         backBtn.click(function(e){
         self._detailsPanel.remove();
