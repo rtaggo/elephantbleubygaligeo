@@ -33,12 +33,26 @@
 				self.locateUser();
 			});
 
+      GGO.EventBus.addEventListener(GGO.EVENTS.SWITCHBASEMAP, function(e) {
+				var basemap = e.target;
+        console.log('Received GGO.EVENTS.SWITCHBASEMAP', basemap);
+        self._switchBasemap(basemap);
+			});
+ 
 			GGO.EventBus.addEventListener(GGO.EVENTS.CLICKEDSTATION, function(e) {
 				var tgt = e.target;
 				console.log('Received GGO.EVENTS.CLICKEDSTATION', tgt);
 				self.routeToStation(tgt);
-			});			
-		},
+			});
+    },
+    _switchBasemap: function(basemap) {
+      console.log('_switchBasemap(' + basemap+')');
+      if (typeof(this._basemaps[basemap]) !== 'undefined') {
+        this._map.removeLayer(this._basemaps[this._currentBasemap]);
+        this._map.addLayer(this._basemaps[basemap]);
+        this._currentBasemap = basemap;
+      }
+    },
 		formatDistance: function(distanceKM){
 			if (distanceKM<1) {
 				return (distanceKM * 1000).toFixed(0) + ' m'; 
@@ -101,30 +115,24 @@
 		},
 		setupMap: function() {
 			var self = this;
-			var stamen_tonerLite = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}', {
-				attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-				subdomains: 'abcd',
-				minZoom: 0,
-				maxZoom: 20,
-				ext: 'png'
-			});
-			/*
-			*/
-			var OpenMapSurfer_Grayscale = L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/roadsg/x={x}&y={y}&z={z}', {
-				maxZoom: 19,
-				attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-			});
-			var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				maxZoom: 19,
-				attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-			});
-
-			var esriGrey    = L.tileLayer('//services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-				attribution: "© Galigeo | ESRI",
-				minZoom: 1,
-    			maxZoom: 15,    
-			});
-			
+      
+      self._basemaps = {
+        'streets' : L.tileLayer('//server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+          attribution: "",
+          minZoom: 1,
+          maxZoom: 19,    
+        }),
+        'grey' : L.tileLayer('//services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+          attribution: "",
+          minZoom: 1,
+          maxZoom: 15,    
+        }), 
+        'osm' : L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        })
+      };
+			this._currentBasemap = 'streets';
 			var mapDivId = this._options.mapDivId || 'map';
 			this._map = L.map(mapDivId, {
 				attributionControl: false,
@@ -132,7 +140,7 @@
 				zoomControl: false,
 				contextmenu: true,
 				contextmenuWidth: 140,						
-				layers: [esriGrey]
+				layers: [self._basemaps['streets']]
 			}).setView([0, 0], 2);
 			/*
 			new L.control.zoom({
@@ -203,12 +211,12 @@
 			*/
 			var center = [this._userLocation.coordinates.lng, this._userLocation.coordinates.lat];
 			var radius = this._userLocation.accuracy / 1000;
-			var options = {steps: 120, units: 'kilometers', 
+			var options = {steps: 240, units: 'kilometers', 
 				properties: {
-					"stroke": "#176fff",
+					"stroke": "#73cfff",
 					"stroke-width": 1,
 					"stroke-opacity": 0.4,
-					"fill": "#488dff",
+					"fill": "#73cfff",
 					"fill-opacity": 0.1,
     			}
 			};

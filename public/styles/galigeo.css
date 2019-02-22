@@ -67,8 +67,48 @@ html,body {
 }
 
 .userLocationMarker {
-	background-color: #ADADFF;
+	background-color: #73cfff;
 	border: 2px solid #EFEFEF;
 	border-radius: 50%;
 	box-shadow: 2px 2px 2px #ADADAD;
+}
+
+#layerSwitcherIcon, #locateUserIcon {
+  background-color: #73cfff;
+}
+
+.basemap_icons_container {
+  text-align: center;
+  font-size: 11px;
+}
+.basemap_icon {
+  width : 32%;
+  display : inline-block;
+}
+
+.basemap_icon img {
+  width: 50px;
+  border-radius: 10px;
+}
+
+.basemap_icon.selected img {
+  border: 2px solid #73cfff;
+}
+
+.map_details_container {
+  text-align: center;
+}
+
+.layer_details {
+  width : 48%;
+  display : inline-block;
+}
+
+.layer_details img {
+  width: 50px;
+  border-radius: 10px;
+}
+
+.layer_details.selected img {
+  border: 2px solid #73cfff;
 }

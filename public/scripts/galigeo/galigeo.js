@@ -49,6 +49,7 @@
 	GGO.EVENTS = {
 		APPISREDAY: 'appisready',
 		MAPISREADY: 'mapisready',
+		SWITCHBASEMAP: 'switchbasemap',
 		USERLOCATIONCHANGED: 'userlocationchanged',
 		FETCHSTATIONS : 'fetchstations',
 		STATIONSFILTERED : 'stationsfiltered',			

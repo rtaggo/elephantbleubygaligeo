@@ -55,6 +55,20 @@
         $('#layerSwitcherCard').addClass('slds-hide');
       });
       $('#layerSwitcherCard').css('height', this._viewSize.thirdHeight + 'px');
+      $('.basemap_icons_container .basemap_icon').click(function(e){
+        var basemapClicked = $(this).attr('data-basemap');
+        $(this).siblings().removeClass('selected');
+        $(this).addClass('selected');
+        console.log('Basemap to display: ' + basemapClicked);
+        GGO.EventBus.dispatch(GGO.EVENTS.SWITCHBASEMAP, basemapClicked);
+      });
+
+      $('.map_details_container .layer_details').click(function(e){
+        var layerClicked = $(this).attr('data-layer');
+        $(this).toggleClass('selected');
+        var isVisible = $(this).hasClass('selected');
+        console.log('Layer ' + layerClicked + ' is toggled to ' + (isVisible?'visible': 'hidden'));
+      });
     },
     _handleSwipeUpDownEnd: function(direction, data) {
       var self = this;
