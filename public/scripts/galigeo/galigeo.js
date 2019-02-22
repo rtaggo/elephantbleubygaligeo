@@ -50,6 +50,7 @@
 		APPISREDAY: 'appisready',
 		MAPISREADY: 'mapisready',
 		SWITCHBASEMAP: 'switchbasemap',
+		ZOOMTOUSERLOCATION: 'zoomtouserlocation',
 		USERLOCATIONCHANGED: 'userlocationchanged',
 		FETCHSTATIONS : 'fetchstations',
 		STATIONSFILTERED : 'stationsfiltered',			

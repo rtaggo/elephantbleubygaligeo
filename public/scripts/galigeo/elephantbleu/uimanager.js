@@ -51,6 +51,9 @@
       $('#layerSwitcherIcon').click(function(e){
         $('#layerSwitcherCard').toggleClass('slds-hide');
       });
+      $('#locateUserIcon').click(function(e){
+        GGO.EventBus.dispatch(GGO.EVENTS.ZOOMTOUSERLOCATION);
+      });
       $('#layerSwitcherCard .slds-card__header button').click(function(e){
         $('#layerSwitcherCard').addClass('slds-hide');
       });

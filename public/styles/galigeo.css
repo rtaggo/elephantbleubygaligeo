@@ -97,6 +97,7 @@ html,body {
 
 .map_details_container {
   text-align: center;
+  font-size: 11px;
 }
 
 .layer_details {

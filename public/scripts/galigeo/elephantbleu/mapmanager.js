@@ -33,6 +33,11 @@
 				self.locateUser();
 			});
 
+      GGO.EventBus.addEventListener(GGO.EVENTS.ZOOMTOUSERLOCATION, function(e) {
+				console.log('Received GGO.EVENTS.ZOOMTOUSERLOCATION');
+        self.zommToUserLocation();
+			});
+
       GGO.EventBus.addEventListener(GGO.EVENTS.SWITCHBASEMAP, function(e) {
 				var basemap = e.target;
         console.log('Received GGO.EVENTS.SWITCHBASEMAP', basemap);
@@ -155,7 +160,12 @@
 			};
 			this._map.on('locationfound', onLocationFound);
 			this._map.on('locationerror', onLocationError);
-		},
+    },
+    zommToUserLocation: function() {
+      if (typeof(this._userLocation) !== 'undefined' && typeof(this._userLocation.coordinates)!=='undefined'){
+        this._map.flyTo(this._userLocation.coordinates);
+      }
+    }, 
 		locateUser: function() {
       if (this._options.userLocated){
         var dataLoc = {
