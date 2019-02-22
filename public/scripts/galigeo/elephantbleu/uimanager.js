@@ -103,6 +103,7 @@
       theUL.find('.station-title_container .slds-icon').click(function(e){
         var stationId = $(this).attr('data-stationid');
         console.log('Click on icon to display information for station id = ' + stationId);
+        self.findStationForDetails(stationId, 'elephantbleu');
       });
       theUL.find('.station-title_container .station-title').click(function(e){
         var stationId = $(this).attr('data-stationid');
@@ -110,6 +111,43 @@
         GGO.EventBus.dispatch(GGO.EVENTS.ZOOMTOSTATION, {stationId: stationId, layer: 'elephantbleu'});
       });
       ctnr.append(theUL);
+    },
+    findStationForDetails: function(stationId, layer){
+      try {
+        var stations = this._stations[layer].stations;
+        var nbStations = stations.length;
+        var s, station;
+        for (s = 0; s<nbStations; s++) {
+          station = stations[s];
+          if (station.getId() === stationId){
+            this.showStationDetails(station);
+            break;
+          } 
+        }
+      } catch (e){
+        console.error('Error in findStationForDetails method', e);
+      }
+    },
+    showStationDetails: function(station){
+      console.log('showStationDetails', station);
+      var self = this;
+      this._currentStation = station;
+      this._detailsPanel = $('<div class="slds-panel slds-is-open slds-size_full station-details_panel" aria-hidden="false"></div>');
+      var backBtn = $('<button class="slds-button slds-button_icon slds-button_icon-small slds-panel__back" title="Collapse Panel Header"></button>')
+        .append($('<svg class="slds-button__icon" aria-hidden="true"><use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#back"></use></svg>'));
+      this._detailsPanel
+        .append($('<div class="slds-panel__header"></div>')
+          .append(backBtn)
+          .append($('<h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Station de lavage '+this._currentStation.getTitle()+'</h2>'))
+        );
+        backBtn.click(function(e){
+        self._detailsPanel.remove();
+      });
+      var panelBody = $('<div class="slds-panel__body"></div>');
+      // TODO: append station details in panelBody
+      this._currentStation.buildDetailsView(panelBody);
+      this._detailsPanel.append(panelBody);
+      $('#mainAppContainer').prepend(this._detailsPanel);
     },
     _handleSwipeUpDownEnd: function(direction, data) {
       var self = this;

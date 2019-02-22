@@ -65,6 +65,15 @@
         }
         return content;
       },
+      buildDetailsView: function(container){
+
+      },  
+      getId: function(){
+        return this._data.id;
+      },
+      getTitle: function(){
+        return this._data.nom;
+      }
     };
     GGO.StationElephantBleu.prototype = $.extend(true, {}, GGO.Station.prototype, GGO.StationElephantBleu.prototype);
   })();
