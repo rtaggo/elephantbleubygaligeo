@@ -12,7 +12,8 @@
         height: $(window).height()
       };
       this._viewSize.halfHeight = (this._viewSize.height/2);
-      this._viewSize.heightThreshold = (this._viewSize.height/4);
+      this._viewSize.thirdHeight = (this._viewSize.height/3);
+      this._viewSize.heightThreshold = (this._viewSize.height/7);
       this._setupListeners();
     },
     _setupListeners: function() {
@@ -32,8 +33,13 @@
           if (phase !== "cancel" && phase !== "end") {
             if (fingerData[0].end.y < (self._viewSize.height - 20)) {
               var tempCardHeight = (self._viewSize.height - fingerData[0].end.y);
-              $('#mainAppContainer .bottom-card').css('height', tempCardHeight);
+              $('#dataExplorerCard').css('height', tempCardHeight);
             } 
+            if (fingerData[0].end.y < (self._viewSize.halfHeight)) {
+              $('#locateuser_container').addClass('slds-hide');
+            } else {
+              $('#locateuser_container').removeClass('slds-hide');
+            }
           } else if ( phase === "end") {
             console.log('ENDED fingerData: ' + JSON.stringify(fingerData[0]));
             self._handleSwipeUpDownEnd(direction, fingerData[0]);
@@ -42,18 +48,29 @@
         //Default is 75px, set to 0 for demo so any distance triggers swipe
         threshold:0
       });
+      $('#layerSwitcherIcon').click(function(e){
+        $('#layerSwitcherCard').toggleClass('slds-hide');
+      });
+      $('#layerSwitcherCard .slds-card__header button').click(function(e){
+        $('#layerSwitcherCard').addClass('slds-hide');
+      });
+      $('#layerSwitcherCard').css('height', this._viewSize.thirdHeight + 'px');
     },
     _handleSwipeUpDownEnd: function(direction, data) {
       var self = this;
-      if ((data.end.y > (self._viewSize.halfHeight - self._viewSize.heightThreshold)) &&  (data.end.y < (self._viewSize.halfHeight + self._viewSize.heightThreshold))) {
-        $('#mainAppContainer .bottom-card').css('height', (self._viewSize.halfHeight +'px'));
-      } else {
-        if ((direction === 'up') && (data.end.y < (self._viewSize.halfHeight - self._viewSize.heightThreshold))) {
-          $('#mainAppContainer .bottom-card').css('height', (self._viewSize.height +'px'));
-        } else if ((direction === 'down') && (data.end.y > (self._viewSize.halfHeight + self._viewSize.heightThreshold))) {
-          $('#mainAppContainer .bottom-card').css('height', '20px');
-        }
+      var bCardHeight = 24;
+      switch (direction) {
+        case 'up' : 
+          bCardHeight = (data.end.y < (this._viewSize.halfHeight - this._viewSize.heightThreshold)) ? this._viewSize.height : this._viewSize.thirdHeight;
+          break;
+        case 'down' : 
+          bCardHeight = (data.end.y > (this._viewSize.thirdHeight + this._viewSize.heightThreshold)) ? bCardHeight : this._viewSize.thirdHeight;
+          break;
+        default:
+          console.log('Direction \''+direction+'\' not supported');
+          bCardHeight = this._viewSize.thirdHeight;
       }
+      $('#dataExplorerCard').css('height', bCardHeight + 'px');
     },
     registerSwipes: function() {
       

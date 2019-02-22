@@ -40,22 +40,27 @@
 		</div>
 		<div id="mainAppContainer" class="slds-hide">
 			<div id="topright_container" class="top-right_container">
-					<span class="slds-icon_container slds-icon_container_circle slds-icon-action-map" title="Description of icon when needed">
+					<span id="layerSwitcherIcon" class="slds-icon_container slds-icon_container_circle slds-icon-action-map">
 							<svg class="slds-icon slds-icon_x-small" aria-hidden="true">
 							  <use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#standard_objects"></use>
 							</svg>
             <span class="slds-assistive-text">Description of icon when needed</span>
             </span>
-			</div>
-			<div id="traceDiv">
-
-			</div>
-			<article class="slds-card bottom-card ">
+      </div>
+			<article id="dataExplorerCard" class="slds-card bottom-card">
 				<div class="slds-card__header slds-grid">
-					<header id="maincard-header" class="slds-media slds-media_center slds-has-flexi-truncate">
+          <div id="locateuser_container" class="locate-user_container">
+              <span id="locateUserIcon" class="slds-icon_container slds-icon_container_circle slds-icon-action-map" >
+                  <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+                    <use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#send"></use>
+                  </svg>
+                <span class="slds-assistive-text">Description of icon when needed</span>
+              </span>
+          </div>
+          <header id="maincard-header" class="slds-media slds-media_center slds-has-flexi-truncate">
 						<div class="slds-media__body">
 							<div id="swiper_handle" style="text-align:center;">
-								<span class="slds-icon_container slds-icon-utility-assignment" title="Description of icon when needed">
+								<span class="slds-icon_container slds-icon-utility-assignment">
 									<svg class="slds-icon slds-icon-text-default slds-icon_xx-small" aria-hidden="true">
 										<use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#assignment"></use>
 									</svg>
@@ -66,6 +71,37 @@
 					</header>
 				</div>
 				<div class="slds-card__body slds-card__body_inner">Card Body</div>
+      </article>
+      <!-- 
+			<div class="slds-panel slds-size_medium slds-panel_docked slds-panel_docked-left slds-is-open" aria-hidden="false">
+			<div class="slds-panel__header">
+				<h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Panel Header</h2>
+				<button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close" title="Collapse Panel Header">
+				<svg class="slds-button__icon" aria-hidden="true">
+					<use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+				</svg>
+				<span class="slds-assistive-text">Collapse Panel Header</span>
+				</button>
+			</div>
+			<div class="slds-panel__body">A panel body accepts any layout or component</div>
+      </div>
+    -->
+			<article id="layerSwitcherCard" class="slds-card bottom-card slds-hide">
+				<div class="slds-card__header slds-grid" style="padding: 0px;">
+					<header class="slds-media slds-media_center slds-has-flexi-truncate">
+						<div class="slds-media__body">							
+            </div>
+            <div class="slds-no-flex">
+              <button class="slds-button slds-button_icon slds-button_icon-small ">
+                  <svg class="slds-button__icon" aria-hidden="true">
+                    <use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                  </svg>
+                  <span class="slds-assistive-text">Collapse Panel Header</span>
+                </button>
+            </div>            
+					</header>
+				</div>
+				<div class="slds-card__body slds-card__body_inner">Type de carte</div>
 			</article>
 		</div>
 	</div>
