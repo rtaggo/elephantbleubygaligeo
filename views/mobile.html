@@ -4,10 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<script src="/scripts/vendors/jquery/jquery-3.3.1.min.js"></script>
-	<script src="https://code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.js"></script>
+	<script src="/scripts/vendors/jquery/jquery.mobile-1.5.0-alpha.1.min.js"></script>
 	<script src="/scripts/vendors/jquery/jquery.touchSwipe.min.js"></script>
 
-	<script type="module" src="/scripts/galigeo/elephantbleu/elephantbleu.js"></script>
 	<script src='/scripts/vendors/mapbox/V3.1.1/mapbox.js'></script>
 	<link rel="stylesheet" type="text/css" href="/scripts/vendors/mapbox/V3.1.1/mapbox.css" />
 
@@ -15,6 +14,8 @@
 	<link rel="stylesheet" type="text/css" href="/styles/slds/assets/styles/salesforce-lightning-design-system-vf.css" />
 
 	<link rel="stylesheet" type="text/css" href="/styles/galigeo.css" />
+
+	<script type="module" src="./scripts/galigeo/elephantbleu/elephantbleu.js"></script>
 
 </head>
 <body>
@@ -70,7 +71,11 @@
 						</div>
 					</header>
 				</div>
-				<div class="slds-card__body slds-card__body_inner">Card Body</div>
+				<div class="slds-card__body slds-card__body_inner">
+					<div id="elephantbleuStations_Container">
+					</div>
+
+				</div>
       </article>
 
       <article id="layerSwitcherCard" class="slds-card bottom-card slds-hide">
@@ -150,5 +155,15 @@
 			self.galigeo = new GGO.GGOApp ();
 		});
 	</script>
+	<!--
+	<script src='/scripts/galigeo/galigeo.js'></script>
+	<script src='/scripts/galigeo/eventbus.js'></script>
+	<script src='/scripts/galigeo/elephantbleu/station/station.js'></script>
+	<script src='/scripts/galigeo/elephantbleu/station/stationelephantbleu.js'></script>
+	<script src='/scripts/galigeo/elephantbleu/ggoapp.js'></script>
+	<script src='/scripts/galigeo/elephantbleu/uimanager.js'></script>
+	<script src='/scripts/galigeo/elephantbleu/mapmanager.js'></script>
+	<script src='/scripts/galigeo/elephantbleu/datamanager.js'></script>
+	-->
 </body>
 </html>

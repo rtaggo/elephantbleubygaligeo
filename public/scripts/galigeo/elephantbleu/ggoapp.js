@@ -23,14 +23,9 @@
         }
       }
       this._uiManager = new GGO.UIManager(modulesOptions);
-
       this._mapManager = new GGO.MapManager(modulesOptions);
-      /*
       this._dataManager = new GGO.DataManager(modulesOptions);
-      this._uiManager = new GGO.UIManager(modulesOptions);
-      this._sireneExplorer = new GGO.SireneExplorer(modulesOptions);
-      this._posAnalyzer = new GGO.POSAnalyzer(modulesOptions);
-      */
+
       this.wakeupApp();
     },
     wakeupApp: function() {

@@ -15,25 +15,22 @@
       this._viewSize.thirdHeight = (this._viewSize.height/3);
       this._viewSize.heightThreshold = (this._viewSize.height/7);
       this._setupListeners();
+      $('#dataExplorerCard').css({
+        'height' : this._viewSize.thirdHeight + 'px',
+        'max-height' : this._viewSize.thirdHeight + 'px'
+      });
     },
     _setupListeners: function() {
       var self = this;
-      $('#swiper_handle').swipe( {
-        /*
-        wipeUp : function(event, direction, distance, duration, fingerCount, fingerData) {
-          $('#traceDiv').append($('<p>Swipe ' + direction +'</p>'));
-          console.log("Swipe " + direction);
-        },
-        swipeDown : function(event, direction, distance, duration, fingerCount, fingerData) {
-          $('#traceDiv').append($('<p>Swipe ' + direction +'</p>'));
-          console.log("Swipe " + direction);
-        },
-        */
+      $('#dataExplorerCard').swipe( {
         swipeStatus: function(event, phase, direction, distance, duration, fingers, fingerData, currentDirection) {
           if (phase !== "cancel" && phase !== "end") {
             if (fingerData[0].end.y < (self._viewSize.height - 20)) {
               var tempCardHeight = (self._viewSize.height - fingerData[0].end.y);
-              $('#dataExplorerCard').css('height', tempCardHeight);
+              $('#dataExplorerCard').css({
+                'height' : tempCardHeight,
+                'max-height' : tempCardHeight
+              });
             } 
             if (fingerData[0].end.y < (self._viewSize.halfHeight)) {
               $('#locateuser_container').addClass('slds-hide');
@@ -72,6 +69,20 @@
         var isVisible = $(this).hasClass('selected');
         console.log('Layer ' + layerClicked + ' is toggled to ' + (isVisible?'visible': 'hidden'));
       });
+      // RENDERSTATIONS
+      GGO.EventBus.addEventListener(GGO.EVENTS.RENDERSTATIONS, function(e) {
+				var data = e.target;
+        console.log('UIManager Received GGO.EVENTS.RENDERSTATIONS', data);
+        self.renderStations(data);
+			});
+    },
+    renderStations: function(data){
+      var ctnr = $('#elephantbleuStations_Container').empty();
+      var theUL = $('<ul class="slds-has-dividers_bottom-space"></ul>');
+      $.each(data.stations, function(idx, val){
+        theUL.append($('<li class="slds-item"></li>').append(val.renderHTML()));
+      });
+      ctnr.append(theUL);
     },
     _handleSwipeUpDownEnd: function(direction, data) {
       var self = this;
@@ -87,7 +98,10 @@
           console.log('Direction \''+direction+'\' not supported');
           bCardHeight = this._viewSize.thirdHeight;
       }
-      $('#dataExplorerCard').css('height', bCardHeight + 'px');
+      $('#dataExplorerCard').css({
+        'height' : bCardHeight + 'px',
+        'max-height' : bCardHeight + 'px'
+      });
     },
     registerSwipes: function() {
       

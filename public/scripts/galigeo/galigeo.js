@@ -53,6 +53,8 @@
 		ZOOMTOUSERLOCATION: 'zoomtouserlocation',
 		USERLOCATIONCHANGED: 'userlocationchanged',
 		FETCHSTATIONS : 'fetchstations',
+		FETCHEDSTATIONS : 'fetchedstations',
+		RENDERSTATIONS : 'renderstations',
 		STATIONSFILTERED : 'stationsfiltered',			
 		CLICKEDSTATION : 'clickedstation',			
 	}

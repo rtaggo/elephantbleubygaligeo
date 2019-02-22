@@ -17,7 +17,14 @@
 		this._stationsFetched = false;
 		this._userLocation = {
 			orientation: 0
-		}
+    }
+    this._flyZoomToOptions = {
+      maxZoom : 13
+    };
+    this._stationLayers = {
+      elephantbleu : {},
+      concurrence: {}
+    };
 		this.init();
 	};
 
@@ -49,6 +56,30 @@
 				console.log('Received GGO.EVENTS.CLICKEDSTATION', tgt);
 				self.routeToStation(tgt);
 			});
+
+			GGO.EventBus.addEventListener(GGO.EVENTS.FETCHEDSTATIONS, function(e) {
+				var data = e.target;
+        console.log('Received GGO.EVENTS.FETCHEDSTATIONS', data);
+        self.handleFetchedStationsResponse(data);
+			});
+    },
+    handleFetchedStationsResponse: function(data){
+      if (data.request_parameters.layer === 'elephantbleu') {
+        this.handleEBStations(data);    
+      }
+    },
+    handleEBStations: function(data){
+      if ((typeof(this._stationLayers.elephantbleu.layer) !== 'undefined') && (this._stationLayers.elephantbleu.layer !== null)) {
+        this._stationLayers.elephantbleu.layer.clearLayers();
+      } else {
+        this._stationLayers.elephantbleu.layer = L.mapbox.featureLayer().addTo(this._map);
+      }
+      this._stationLayers.elephantbleu.geojson = data.geojson;
+      this._stationLayers.elephantbleu.layer.setGeoJSON(this._stationLayers.elephantbleu.geojson);
+      GGO.EventBus.dispatch(GGO.EVENTS.RENDERSTATIONS, data);
+    }, 
+    handleConcurrenceStations: function(data){
+
     },
     _switchBasemap: function(basemap) {
       console.log('_switchBasemap(' + basemap+')');
@@ -65,56 +96,6 @@
 				return distanceKM.toFixed(2) + ' km';
 			}
 		},			
-		routeToStation: function(destination){
-			var self = this;
-			var startPositionLatLng = this._userLocation.coordinates;
-			var toPositionLatLng = {lat: destination.geometry.coordinates[1], lng: destination.geometry.coordinates[0]};
-        	var startEndPosition = 'point='+startPositionLatLng.lat+','+startPositionLatLng.lng+'&point='+toPositionLatLng.lat+','+toPositionLatLng.lng;
-        	var routeUrl = 'https://galigeogeoservice.herokuapp.com/rest/1.0/geoservice/route?' + startEndPosition + '&vehicle=car&points_encoded=false';
-        	$.ajax({
-				type: 'GET',
-				url: routeUrl,
-				success: function(data) {
-					console.log('Route response: ', data);
-					var coords = data.paths[0].points.coordinates;
-					coords.unshift([startPositionLatLng.lng, startPositionLatLng.lat]);
-					coords.push([toPositionLatLng.lng, toPositionLatLng.lat]);
-					if (typeof(self._routeLayer) === 'undefined') {
-						self._routeLayer = L.mapbox.featureLayer().addTo(self._map);
-					}
-					var path = turf.lineString(coords, {
-	                    "stroke": "#73cfff",
-	                    "stroke-width": 2,
-	                    "opacity":1
-	                });
-					self._routeLayer
-						.clearLayers()
-						.setGeoJSON(path);
-					//self.map.flyToBounds(self._routeLayer.getBounds(), {padding: L.point(50,50)});
-					self._map.fitBounds(self._routeLayer.getBounds(), {padding: L.point(50,50)});
-					window.setTimeout(function(){
-						$('path').css('stroke-dashoffset',0);
-					},1000);
-					//var infoContent = self._formatDuration(data.paths[0].time);// + ' (' + self._formatDistance(data.paths[0].distance) + ')';
-					var infoContent = self.formatDistance(data.paths[0].distance/1000); // + ' (' + self._formatDuration(data.paths[0].time) + ')'; 
-					L.marker([coords[parseInt(coords.length*0.5)][1],coords[parseInt(coords.length*0.5)][0]],{
-                        icon: L.divIcon({
-                            className: 'distance-icon',
-                            html: '<strong style="color:#73cfff; font-size:10px;line-height: 12px;vertical-align:middle;">'+infoContent+'</strong>',
-                            iconSize: [65, 25]
-                        })})
-                    .addTo(self._routeLayer);
-					self._routeLayer.bringToFront();
-				},
-				error:  function(jqXHR, textStatus, errorThrown) { 
-					if (textStatus === 'abort') {
-						console.warn('Route request aborted');
-					} else {
-						console.error('Error for Routerequest: ' + textStatus, errorThrown);
-					}
-				}
-			});
-		},
 		getMap: function() {
 			return this._map;
 		},
@@ -163,7 +144,7 @@
     },
     zommToUserLocation: function() {
       if (typeof(this._userLocation) !== 'undefined' && typeof(this._userLocation.coordinates)!=='undefined'){
-        this._map.flyTo(this._userLocation.coordinates);
+        this._map.setView(this._userLocation.coordinates, this._flyZoomToOptions.maxZoom);
       }
     }, 
 		locateUser: function() {
@@ -173,9 +154,9 @@
           accuracy: 10
         };
         this.handleUserLocationFound(dataLoc);
-        this._map.setView(dataLoc.latlng,13);
+        this._map.setView(dataLoc.latlng,this._flyZoomToOptions.maxZoom);
       } else {
-        this._map.locate({setView: true, maxZoom: 14,enableHighAccuracy: true});
+        this._map.locate({setView: true, maxZoom: this._flyZoomToOptions.maxZoom,enableHighAccuracy: true});
       }
 		},
 		handleUserLocationFound: function(e) {
@@ -193,21 +174,22 @@
 			this._userLocation.accuracy =  e.accuracy;
 			GGO.EventBus.dispatch(GGO.EVENTS.USERLOCATIONCHANGED, data2Send);
 			if (!this._stationsFetched) {
-				GGO.EventBus.dispatch(GGO.EVENTS.FETCHSTATIONS);
+				GGO.EventBus.dispatch(GGO.EVENTS.FETCHSTATIONS, {coordinates: this._userLocation.coordinates, layer: 'elephantbleu'});
 			}
 			this.displayUserLocation();
 		}, 
 		handleUserLocationError: function(e) {
-			console.log('>> handleUserLocationError', e);
-			this._userLocation.coordinates = {
+      console.log('>> handleUserLocationError', e);
+      this._userLocation.coordinates = {
         lat: 48.8535356452292,
-				lng: 2.3482337594032288
-			};
-			this._userLocation.accuracy = 1;
-			if (!this._stationsFetched) {
-				GGO.EventBus.dispatch(GGO.EVENTS.FETCHSTATIONS);
-			}
-			this.displayUserLocation();
+        lng: 2.3482337594032288
+      };
+      this._userLocation.accuracy = 1;
+      if (!this._stationsFetched) {
+        GGO.EventBus.dispatch(GGO.EVENTS.FETCHSTATIONS, {coordinates: this._userLocation.coordinates, layer: 'elephantbleu'});
+      }
+      this.displayUserLocation();
+      this._map.setView(this._userLocation.coordinates,13);
 		},
 		displayUserLocation: function() {
 			var self = this;
@@ -245,133 +227,6 @@
 					lyr.setIcon(circleM);
 				}
 			});
-		},
-		setStationsResponse: function(data) {
-			var self = this;
-			self._stationsFetched = true;
-			self._stationsGeoJSON = data;
-			if ((typeof(self._stationsLayer) !== 'undefined' ) && (self._stationsLayer !== null)) {
-				self._stationsLayer.clearLayers();				
-			} else {
-				self._stationsLayer = L.mapbox.featureLayer();
-				self._stationsLayer.addTo(self._map);
-			}
-			var dataToDisplay = self._stationsGeoJSON;
-			if (typeof(self._userLocation.coordinates) !== 'undefined') {
-				var point = [self._userLocation.coordinates.lng, self._userLocation.coordinates.lat];
-				var bufferLayer = L.mapbox.featureLayer().addTo(this._map);
-				var buffer = this.getBuffer(point, self._currentRadius, 'kilometers', 120);
-				buffer.properties = {
-	                "fill": "#92BA11",
-	                "fill-opacity":0.04,
-	                "stroke": "#92BA11",
-	                "stroke-width": 1,
-	                "stroke-opacity": 0.2,
-	                "whatiam": "Buffer Layer"
-	            };
-
-		        bufferLayer.setGeoJSON(buffer);
-
-	           	dataToDisplay = turf.featureCollection(self._stationsGeoJSON.features.filter(function(station){
-		            var dist = turf.distance(station, point, {units: 'kilometers'});
-		            if (dist <= self._currentRadius) {
-		            	station.properties.distance = dist;
-		            	
-		            	return true;
-		            }
-		        }));		       
-			} 
-			self._stationsLayer.setGeoJSON(dataToDisplay);
-			self._stationsLayer.eachLayer(function(lyr){
-				lyr.setIcon(L.icon(self._defaultIcon));
-				var props = lyr.feature.properties;
-				var popupcontent = '<span class="station-title">' + props.nom+'</span>';
-            	var hasAddress = false;
-            	var addrContent = '';
-            	if (typeof(props.adresse) !== 'undefined' && props.adresse !== '') {
-            		addrContent += '<span style="display: inline-block;">' + props.adresse + '</span>';
-            		hasAddress = true;
-            	}
-            	var addrField = [];
-            	if (typeof(props.code_postal) !== 'undefined' && props.code_postal !== '') {
-            		addrField.push(props.code_postal);
-            		hasAddress = true;
-            	}		            	
-            	if (typeof(props.ville) !== 'undefined' && props.ville !== '') {
-            		addrField.push(props.ville);
-            		hasAddress = true;
-            	}
-            	if (addrField.length > 0) {
-            		addrContent += '<span style="display: inline-block;">' + addrField.join(' - ');
-            	}
-            	if (hasAddress) {
-	            	popupcontent += '<div class="address-content">';
-	            	popupcontent += ' <div style="float: left;"><i class="fa fa-map-marker"></i></div>';
-	            	popupcontent += ' <div style="margin-left: 20px;">'+addrContent+'</div>';
-	            	popupcontent += '</div>';
-	            }
-
-	            var hasServices = false;            
-	            var servicesContent = '<div class="services-content">';
-	            servicesContent += '<div class="services-title">Services proposés</div>';
-				var picto_hp = "<img src='./images/pictos/picto_hp.png' alt='' width='20px' height='20px'/>";
-		        var picto_portique = "<img src='./images/pictos/picto_portique.png' alt='' width='20px' height='20px'/>";
-    		    var picto_aspi = "<img src='./images/pictos/picto_aspirateur.png' alt='' width='20px' height='20px'/>";
-        		var picto_gonfleur = "<img src='./images/pictos/picto_gonfleur.png' alt='' width='20px' height='20px'/>";
-    
-	            if (props.piste_hp !== null && props.piste_hp>0) {
-	            	servicesContent += '<div class="service-type">';
-	            	//servicesContent += '<img src="./images/logo_elephantbleu.png"/><span>' + station.properties.piste_hp + ' Piste(s) Haute pression</span>';
-	            	servicesContent += picto_hp + '<span>' + props.piste_hp + ' Piste(s) Haute pression</span>';
-	            	servicesContent += '</div>';
-					hasServices = true;
-	            }
-	            if (props.piste_pl) {
-	            	servicesContent += '<div class="service-type">';
-	            	servicesContent += picto_hp + '<span> Piste utilitaires</span>';;
-	            	servicesContent += '</div>';
-					hasServices = true;
-	            }
-	            if (props.rouleau_lavage !== null && props.rouleau_lavage>0) {
-	            	servicesContent += '<div class="service-type">';
-	            	servicesContent += picto_portique + '<span>' + props.rouleau_lavage + ' Rouleau(x) de lavage</span>';
-	            	servicesContent += '</div>';
-					hasServices = true;
-	            }
-	            if (props.gonfleur) {
-	            	servicesContent += '<div class="service-type">';
-	            	servicesContent += picto_aspi+'<span>Gonfleur</span>';
-	            	servicesContent += '</div>';
-					hasServices = true;
-	            }
-	            if (props.aspirateur !== null && props.aspirateur>0) {
-	            	servicesContent += '<div class="service-type">';
-	            	servicesContent += picto_gonfleur+'<span>' + props.aspirateur + ' Aspirateur(s)</span>';
-	            	servicesContent += '</div>';
-					hasServices = true;
-	            }
-				servicesContent += '</div>';
-				if (hasServices) {
-					popupcontent+=servicesContent;
-				}
-				lyr.bindPopup(popupcontent);
-
-			});
-			 this._stationsLayer
-		        .off()
-		        /*
-		        .on('mouseover', function(e) {
-		            e.layer.openPopup();
-		        })
-		        .on('mouseout', function(e) {
-		            e.layer.closePopup();
-		        })*/
-		        .on('click', function(e){
-		            e.layer.openPopup();
-		        });
-			self._map.fitBounds(self._stationsLayer.getBounds());
-			GGO.EventBus.dispatch(GGO.EVENTS.STATIONSFILTERED, dataToDisplay);
-			self.updateMapSize();
 		},
 		updateMapSize: function() {
 			$('#map').addClass('halfheight_map');
