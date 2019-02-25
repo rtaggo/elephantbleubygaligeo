@@ -96,13 +96,10 @@
                 }
               }
             }
-
             // Handle errors
             if (errors) {
-              //self._traceDivCtnr.append($('<p></p>').text(errors));
               alert(errors);
             }
-
           });
 
         //imgSnapShotDiv.append(this._imgInput);
@@ -315,9 +312,8 @@
             .append($('<div class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent"></div>')
               .append($('<div class="slds-form-element__label" style="display:inline-block;width:100%">Coordonnées</div>'))
               .append($('<div class="slds-form-element__control" style="width: 48%; display: inline-block;">'+this.getFormattedAddress()+'</div>'))
-              .append($('<div class="slds-form-element__control" style="width: 48%; display: inline-block;text-align: right;"></div>')
-                
-                //.append($('<img width="100" src="https://api.mapbox.com/v4/mapbox.streets/url-http%3A%2F%2Felephantbleubygaligeo.herokuapp.com%2Fimages%2Felephant_marker.png('+this._coordinates.join(',')+')/auto/200x200.png64?access_token=pk.eyJ1IjoicnRhZ2dvIiwiYSI6ImNqc2s0bXEyZzJoZHczeXRiZDBwY2xramsifQ.XHY28Og6-Jx6KGLYeXKcxg" alt="Elephant bleu">'))
+              .append($('<div class="slds-form-element__control" style="width: 48%; display: inline-block;text-align: right; vertical-align:top;"></div>')
+                .append($('<img width="100" src="https://api.mapbox.com/v4/mapbox.streets/url-http%3A%2F%2Felephantbleubygaligeo.herokuapp.com%2Fimages%2Felephant_marker.png('+this._coordinates.join(',')+')/'+this._coordinates.join(',')+',16/200x200.png64?access_token=pk.eyJ1IjoicnRhZ2dvIiwiYSI6ImNqc2s0bXEyZzJoZHczeXRiZDBwY2xramsifQ.XHY28Og6-Jx6KGLYeXKcxg" alt="Elephant bleu">'))
                 )
               )
             );

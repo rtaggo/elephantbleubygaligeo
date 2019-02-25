@@ -117,6 +117,9 @@ body {
   border: 2px solid #73cfff;
 }
 
+.slds-item.selected {
+  border: 1px solid #73cfff !important;
+}
 
 .station-title_container .station-distance {
   font-size: 9px;

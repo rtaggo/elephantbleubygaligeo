@@ -103,6 +103,9 @@
       theUL.find('.station-title_container').click(function(e){
         var stationId = $(this).attr('data-stationid');
         console.log('Click on on title for station id = ' + stationId + ' ==> TODO: zoom to it');
+        var ggparent = $(e.currentTarget).parent().parent();
+        ggparent.siblings().removeClass('selected');
+        ggparent.addClass('selected');        
         GGO.EventBus.dispatch(GGO.EVENTS.ZOOMTOSTATION, {stationId: stationId, layer: 'elephantbleu'});
       });
       theUL.find('.station-title_container .slds-icon').click(function(e){
@@ -176,10 +179,28 @@
       );
       cancelBtn.click(function(e){
         self._editPanel.remove();
-      });
+      });      
       okBtn.click(function(e){
         //self.displayEditForm();
-        alert('TODO: save action...');
+        //alert('TODO: save action...');
+        var notifyContainer = $('<div class="slds-region_narrow slds-is-relative"></div>')
+          .append($('<div class="slds-notify_container slds-is-absolute"></div>')
+            .append($('<div class="slds-notify slds-notify_toast slds-theme_info" role="status"></div>')
+              .append($('<div class="slds-notify__content"></div>')
+                .append($('<div role="status" class="slds-spinner slds-spinner_x-small slds-spinner_inline" style="display: inline-block; top: 10px;"></div>')
+                  .append($('<span class="slds-assistive-text">Loading</span>'))
+                  .append($('<div class="slds-spinner__dot-a"></div>'))
+                  .append($('<div class="slds-spinner__dot-b"></div>')))
+                .append($('<h2 class="slds-text-heading_small" style="display: inline-block; margin-left: 10px;">Enregistrement en cours ...</h2>'))
+              )
+            )
+          );
+
+        $('#mainAppContainer').append(notifyContainer);
+        setTimeout(function(e){
+          self.onSaveCompleted();     
+          self._editPanel.remove();
+        }, 2000);
       });
       
       var panelBody = $('<div class="slds-panel__body"></div>');
@@ -187,6 +208,24 @@
       this._editPanel.append(panelBody);
       $('#mainAppContainer').prepend(this._editPanel);
     },
+    onSaveCompleted: function() {
+      $('.slds-region_narrow').remove();
+        var notifySuccessContainer = $('<div class="slds-region_narrow slds-is-relative"></div>')
+        .append($('<div class="slds-notify_container slds-is-absolute"></div>')
+          .append($('<div class="slds-notify slds-notify_toast slds-theme_success" role="status"></div>')
+            .append($('<span class="slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">')
+              .append($('<svg class="slds-icon slds-icon_small" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#success" /></svg>'))
+            )
+            .append($('<div class="slds-notify__content"></div>')
+              .append($('<h2 class="slds-text-heading_small" style="display: inline-block; margin-left: 10px;">'+this._currentStation.getTitle() + ' mis à jour.</h2>'))
+            )
+          )
+        );
+        $('#mainAppContainer').append(notifySuccessContainer);
+        setTimeout(function(e){
+          $('.slds-region_narrow').remove();
+        }, 1000);
+    }, 
     _handleSwipeUpDownEnd: function(direction, data) {
       var self = this;
       var bCardHeight = 24;
