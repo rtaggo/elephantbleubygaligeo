@@ -1,21 +1,21 @@
 (function() {
     'use strict';
-    GGO.StationElephantBleu = function(data, coordinates) {
+    GGO.StationConcurrence = function(data, coordinates) {
       this._data = data;
       this._coordinates = coordinates;
       this._useBlob = false && window.URL; 		
     };
-    GGO.StationElephantBleu.prototype = {
+    GGO.StationConcurrence.prototype = {
       getDetails: function(){
-        console.warn('GGO.StationElephantBleu.getDetails need to be implemented');
+        console.warn('GGO.StationConcurrence.getDetails need to be implemented');
       },
       renderHTML: function(){
-        var content = $('<div data-stationid="'+this._data.id+'" data-layertype="elephantbleu"></div>');
+        var content = $('<div data-stationid="'+this._data.id+'" data-layertype="concurrence"></div>');
         content
-          .append($('<div class="station-title_container" data-stationid="'+this._data.id+'" data-layertype="elephantbleu"></div>')
-            .append($('<span class="station-title" data-stationid="'+this._data.id+'" data-layertype="elephantbleu"></span>').text('Station ' + this._data.nom))
+          .append($('<div class="station-title_container" data-stationid="'+this._data.id+'" data-layertype="concurrence"></div>')
+            .append($('<span class="station-title" data-stationid="'+this._data.id+'" data-layertype="concurrence"></span>').text('Station ' + this._data.nom))
             .append($('<span class="station-distance"></span>').text(GGO.formatDistance(this._data.distance)))
-            .append($('<svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-left_small slds-shrink-none" aria-hidden="true" data-stationid="'+this._data.id+'" data-layertype="elephantbleu"><use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#chevronright"></use></svg>')));
+            .append($('<svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-left_small slds-shrink-none" aria-hidden="true" data-stationid="'+this._data.id+'" data-layertype="concurrence"><use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#chevronright"></use></svg>')));
         var hasServices = false;            
         var servicesContent = $('<div class="services-content"></div>');
         var picto_hp_src = './images/pictos/picto_hp.png';
@@ -481,7 +481,6 @@
       getDistance : function(){
         return this._data.distance;
       }
-      
     };
     GGO.StationElephantBleu.prototype = $.extend(true, {}, GGO.Station.prototype, GGO.StationElephantBleu.prototype);
   })();

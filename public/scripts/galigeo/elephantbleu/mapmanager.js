@@ -33,6 +33,13 @@
 			popupAnchor: [0, -16], // point from which the popup should open relative to the iconAnchor
 			className: 'dot'
 		};
+    this._defaultConcurrenceIcon = {
+			iconUrl: '/images/concurrence_marker.png',
+			iconSize: [32, 30], // size of the icon
+			iconAnchor: [16, 30], // point of the icon which will correspond to marker's location
+			popupAnchor: [0, -15], // point from which the popup should open relative to the iconAnchor
+			className: 'dot'
+		};
 		
 		this.init();
 	};
@@ -77,6 +84,13 @@
         console.log('Received GGO.EVENTS.FETCHEDSTATIONS', data);
         self.handleFetchedStationsResponse(data);
       });
+
+      GGO.EventBus.addEventListener(GGO.EVENTS.TOGGLELAYER, function(e) {
+        var data = e.target;
+        console.log('Received GGO.EVENTS.TOGGLELAYER', data);
+        self.doToggleLayer(data);
+      });
+      
     },
     doZoomToStation: function(stationData){
       var self = this;
@@ -87,11 +101,35 @@
             return false;
           }
         });
+      } else if (stationData.layer === 'concurrence') {
+        this._stationLayers.concurrence.layer.eachLayer(function(lyr){
+          if (lyr.feature.properties.id === stationData.stationId) {
+            self._map.setView(lyr.getLatLng(),14);
+            return false;
+          }
+        });
+      }
+    },
+    doToggleLayer: function(data) {
+      if (data.visible) {
+        GGO.EventBus.dispatch(GGO.EVENTS.FETCHSTATIONS, {coordinates: this._userLocation.coordinates, layer: data.layer});        
+      } else {
+        if (data.layer === 'elephantbleu') {
+          if ((typeof(this._stationLayers.elephantbleu.layer) !== 'undefined') && (this._stationLayers.elephantbleu.layer !== null)) {
+            this._stationLayers.elephantbleu.layer.clearLayers();
+          }
+        } else if (data.layer === 'concurrence') {
+          if ((typeof(this._stationLayers.concurrence.layer) !== 'undefined') && (this._stationLayers.concurrence.layer !== null)) {
+            this._stationLayers.concurrence.layer.clearLayers();
+          }
+        }
       }
     },
     handleFetchedStationsResponse: function(data){
       if (data.request_parameters.layer === 'elephantbleu') {
         this.handleEBStations(data);    
+      } else if (data.request_parameters.layer === 'concurrence') {
+        this.handleConcurrenceStations(data);    
       }
     },
     handleEBStations: function(data){
@@ -109,7 +147,18 @@
       GGO.EventBus.dispatch(GGO.EVENTS.RENDERSTATIONS, data);
     }, 
     handleConcurrenceStations: function(data){
-
+      var self = this;
+      if ((typeof(this._stationLayers.concurrence.layer) !== 'undefined') && (this._stationLayers.concurrence.layer !== null)) {
+        this._stationLayers.concurrence.layer.clearLayers();
+      } else {
+        this._stationLayers.concurrence.layer = L.mapbox.featureLayer().addTo(this._map);
+      }
+      this._stationLayers.concurrence.geojson = data.geojson;
+      this._stationLayers.concurrence.layer.setGeoJSON(this._stationLayers.concurrence.geojson);
+      this._stationLayers.concurrence.layer.eachLayer(function(lyr){
+        lyr.setIcon(L.icon(self._defaultConcurrenceIcon));
+      });
+      GGO.EventBus.dispatch(GGO.EVENTS.RENDERSTATIONS, data);
     },
     _switchBasemap: function(basemap) {
       console.log('_switchBasemap(' + basemap+')');

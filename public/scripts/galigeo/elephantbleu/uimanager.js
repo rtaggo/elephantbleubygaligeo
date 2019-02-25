@@ -4,10 +4,10 @@
     this._options = options || {};
     this._stations = {
       elephantbleu : {
-
+        stations: []
       },
       concurrence : {
-
+        stations: []
       }
     };
 		this._init();
@@ -85,34 +85,59 @@
         $(this).toggleClass('selected');
         var isVisible = $(this).hasClass('selected');
         console.log('Layer ' + layerClicked + ' is toggled to ' + (isVisible?'visible': 'hidden'));
+        if (!isVisible) {
+          //self._stations[layerClicked].stations = [];
+          self.renderStations({
+            request_parameters: {
+              layer : layerClicked
+            }, 
+            stations: []
+          });
+        }
+        var dataToSend = {
+          layer : layerClicked,
+          visible : isVisible
+        };
+        GGO.EventBus.dispatch(GGO.EVENTS.TOGGLELAYER, dataToSend);
+        $('#layerSwitcherCard .slds-card__header button').trigger('click');
       });
       // RENDERSTATIONS
       GGO.EventBus.addEventListener(GGO.EVENTS.RENDERSTATIONS, function(e) {
-				var data = e.target;
+        var data = e.target;
         console.log('UIManager Received GGO.EVENTS.RENDERSTATIONS', data);
         self.renderStations(data);
-			});
+      });
     },
     renderStations: function(data){
       var self = this;    
       var ctnr = $('#elephantbleuStations_Container').empty();
       var theUL = $('<ul class="slds-has-dividers_bottom-space"></ul>');
-      this._stations.elephantbleu.stations = data.stations;
-      $.each(data.stations, function(idx, val){
+      if (data.request_parameters.layer === 'elephantbleu') {
+        this._stations.elephantbleu.stations = data.stations;
+      } else if (data.request_parameters.layer === 'concurrence') {
+        this._stations.concurrence.stations = data.stations;
+      }
+      var allStations =  this._stations.elephantbleu.stations.concat( this._stations.concurrence.stations);
+      allStations.sort(function(a, b){
+        return a.getDistance() - b.getDistance();
+      })
+      $.each(allStations, function(idx, val){
         theUL.append($('<li class="slds-item"></li>').append(val.renderHTML()));
       });
       theUL.find('.station-title_container').click(function(e){
         var stationId = $(this).attr('data-stationid');
+        var layerType = $(this).attr('data-layertype');
         console.log('Click on on title for station id = ' + stationId + ' ==> TODO: zoom to it');
         var ggparent = $(e.currentTarget).parent().parent();
         ggparent.siblings().removeClass('selected');
         ggparent.addClass('selected');        
-        GGO.EventBus.dispatch(GGO.EVENTS.ZOOMTOSTATION, {stationId: stationId, layer: 'elephantbleu'});
+        GGO.EventBus.dispatch(GGO.EVENTS.ZOOMTOSTATION, {stationId: stationId, layer: layerType});
       });
       theUL.find('.station-title_container .slds-icon').click(function(e){
         var stationId = $(this).attr('data-stationid');
+        var layerType = $(this).attr('data-layertype');
         console.log('Click on icon to display information for station id = ' + stationId);
-        self.findStationForDetails(stationId, 'elephantbleu');
+        self.findStationForDetails(stationId, layerType);
       });
       /*
       theUL.find('.station-title_container .station-title').click(function(e){

@@ -60,12 +60,14 @@
         SWITCHBASEMAP: 'switchbasemap',
         ZOOMTOUSERLOCATION: 'zoomtouserlocation',
         USERLOCATIONCHANGED: 'userlocationchanged',
+        TOGGLELAYER : 'togglelayer',
         FETCHSTATIONS : 'fetchstations',
         FETCHEDSTATIONS : 'fetchedstations',
         RENDERSTATIONS : 'renderstations',
         STATIONSFILTERED : 'stationsfiltered',			
         CLICKEDSTATION : 'clickedstation',			
-        ZOOMTOSTATION : 'zoomtostation',			
+        ZOOMTOSTATION : 'zoomtostation',
+
     }
 })();
 /* end GGO: put code below in galigeo.js */
