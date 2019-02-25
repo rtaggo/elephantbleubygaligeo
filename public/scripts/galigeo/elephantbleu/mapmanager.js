@@ -137,7 +137,16 @@
       if ((typeof(this._stationLayers.elephantbleu.layer) !== 'undefined') && (this._stationLayers.elephantbleu.layer !== null)) {
         this._stationLayers.elephantbleu.layer.clearLayers();
       } else {
-        this._stationLayers.elephantbleu.layer = L.mapbox.featureLayer().addTo(this._map);
+				this._stationLayers.elephantbleu.layer = L.mapbox.featureLayer().addTo(this._map);
+				this._stationLayers.elephantbleu.layer.off()
+					.on('click', function(e){
+						console.log('Clicked on a marker elephant bleu');
+						GGO.EventBus.dispatch(GGO.EVENTS.MAPMARKERCLICKED, {
+							stationId : e.layer.feature.properties.id, 
+							layerType: 'elephantbleu'
+						});
+					});
+
       }
       this._stationLayers.elephantbleu.geojson = data.geojson;
       this._stationLayers.elephantbleu.layer.setGeoJSON(this._stationLayers.elephantbleu.geojson);
@@ -151,7 +160,15 @@
       if ((typeof(this._stationLayers.concurrence.layer) !== 'undefined') && (this._stationLayers.concurrence.layer !== null)) {
         this._stationLayers.concurrence.layer.clearLayers();
       } else {
-        this._stationLayers.concurrence.layer = L.mapbox.featureLayer().addTo(this._map);
+				this._stationLayers.concurrence.layer = L.mapbox.featureLayer().addTo(this._map);
+				this._stationLayers.concurrence.layer.off()
+					.on('click', function(e){
+						console.log('Clicked on a marker elephant bleu');
+						GGO.EventBus.dispatch(GGO.EVENTS.MAPMARKERCLICKED, {
+							stationId : e.layer.feature.properties.id, 
+							layerType: 'concurrence'
+						});
+					});
       }
       this._stationLayers.concurrence.geojson = data.geojson;
       this._stationLayers.concurrence.layer.setGeoJSON(this._stationLayers.concurrence.geojson);

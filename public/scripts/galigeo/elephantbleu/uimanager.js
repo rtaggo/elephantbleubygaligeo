@@ -107,6 +107,19 @@
         console.log('UIManager Received GGO.EVENTS.RENDERSTATIONS', data);
         self.renderStations(data);
       });
+      // RENDERSTATIONS
+      GGO.EventBus.addEventListener(GGO.EVENTS.MAPMARKERCLICKED, function(e) {
+        var data = e.target;
+        console.log('UIManager Received GGO.EVENTS.MAPMARKERCLICKED', data);
+        self.scrollToCarWash(data);
+      });
+    },
+    scrollToCarWash: function(data) {
+      console.log('scrollToCarWash', data);
+      $('#elephantbleuStations_Container > ul > li.slds-item').removeClass('selected');
+      var tgtElt = $('#elephantbleuStations_Container > ul > li .station-title_container[data-stationid="'+data.stationId+'"]').parent().parent().addClass('selected');
+      var targetOffset = tgtElt.offset().top;
+      $('#elephantbleuStations_Container').scrollTo(tgtElt);
     },
     renderStations: function(data){
       var self = this;    

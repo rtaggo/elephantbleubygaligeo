@@ -66,6 +66,7 @@
         RENDERSTATIONS : 'renderstations',
         STATIONSFILTERED : 'stationsfiltered',			
         CLICKEDSTATION : 'clickedstation',			
+        MAPMARKERCLICKED : 'mapmarkerclicked',			
         ZOOMTOSTATION : 'zoomtostation',
 
     }
