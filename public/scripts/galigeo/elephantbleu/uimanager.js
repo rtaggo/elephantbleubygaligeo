@@ -100,16 +100,23 @@
       $.each(data.stations, function(idx, val){
         theUL.append($('<li class="slds-item"></li>').append(val.renderHTML()));
       });
+      theUL.find('.station-title_container').click(function(e){
+        var stationId = $(this).attr('data-stationid');
+        console.log('Click on on title for station id = ' + stationId + ' ==> TODO: zoom to it');
+        GGO.EventBus.dispatch(GGO.EVENTS.ZOOMTOSTATION, {stationId: stationId, layer: 'elephantbleu'});
+      });
       theUL.find('.station-title_container .slds-icon').click(function(e){
         var stationId = $(this).attr('data-stationid');
         console.log('Click on icon to display information for station id = ' + stationId);
         self.findStationForDetails(stationId, 'elephantbleu');
       });
+      /*
       theUL.find('.station-title_container .station-title').click(function(e){
         var stationId = $(this).attr('data-stationid');
         console.log('Click on on title for station id = ' + stationId + ' ==> TODO: zoom to it');
         GGO.EventBus.dispatch(GGO.EVENTS.ZOOMTOSTATION, {stationId: stationId, layer: 'elephantbleu'});
       });
+      */
       ctnr.append(theUL);
     },
     findStationForDetails: function(stationId, layer){
@@ -135,19 +142,50 @@
       this._detailsPanel = $('<div class="slds-panel slds-is-open slds-size_full station-details_panel" aria-hidden="false"></div>');
       var backBtn = $('<button class="slds-button slds-button_icon slds-button_icon-small slds-panel__back" title="Collapse Panel Header"></button>')
         .append($('<svg class="slds-button__icon" aria-hidden="true"><use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#back"></use></svg>'));
+      var editBtn = $('<button class="slds-button slds-button_icon slds-button_icon-small slds-panel__back" title="Collapse Panel Header"></button>')
+        .append($('<svg class="slds-button__icon" aria-hidden="true"><use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#edit"></use></svg>'));
       this._detailsPanel
         .append($('<div class="slds-panel__header"></div>')
           .append(backBtn)
           .append($('<h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Station de '+this._currentStation.getTitle()+'</h2>'))
-        );
-        backBtn.click(function(e){
+          .append(editBtn)
+      );
+      backBtn.click(function(e){
         self._detailsPanel.remove();
       });
+      editBtn.click(function(e){
+        self.displayEditForm();
+      });
+      
       var panelBody = $('<div class="slds-panel__body"></div>');
       // TODO: append station details in panelBody
       this._currentStation.buildDetailsView(panelBody);
       this._detailsPanel.append(panelBody);
       $('#mainAppContainer').prepend(this._detailsPanel);
+    },
+    displayEditForm: function() {
+      var self = this;
+      this._editPanel = $('<div id="edit_panel" class="slds-panel slds-is-open slds-size_full station-details_panel" aria-hidden="false"></div>').css('z-index', '10');
+      var cancelBtn = $('<button class="slds-button slds-button_neutral">Annuler</button>');
+      var okBtn = $('<button class="slds-button slds-button_neutral">Valider</button>');
+      this._editPanel
+        .append($('<div class="slds-panel__header"></div>')
+          .append(cancelBtn)
+          .append($('<h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header"></h2>'))
+          .append(okBtn)
+      );
+      cancelBtn.click(function(e){
+        self._editPanel.remove();
+      });
+      okBtn.click(function(e){
+        //self.displayEditForm();
+        alert('TODO: save action...');
+      });
+      
+      var panelBody = $('<div class="slds-panel__body"></div>');
+      this._currentStation.buildEditView(panelBody);
+      this._editPanel.append(panelBody);
+      $('#mainAppContainer').prepend(this._editPanel);
     },
     _handleSwipeUpDownEnd: function(direction, data) {
       var self = this;

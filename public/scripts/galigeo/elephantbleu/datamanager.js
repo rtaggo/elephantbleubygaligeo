@@ -51,7 +51,7 @@
         stations: []
       };
       $.each(response.features, function(idxS, valS){
-        dataToSend.stations.push(new GGO.StationElephantBleu(valS.properties));
+        dataToSend.stations.push(new GGO.StationElephantBleu(valS.properties,valS.geometry.coordinates));
       });
       GGO.EventBus.dispatch(GGO.EVENTS.FETCHEDSTATIONS, dataToSend);
     }	
