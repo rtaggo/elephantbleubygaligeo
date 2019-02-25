@@ -55,6 +55,13 @@ body {
   padding-top: 0px;
 }
 
+#layerSwitcherCard .slds-card__body{
+  position: absolute;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+}
+
 #layerSwitcherCard .slds-card__header, #dataExplorerCard .slds-card__header{
   margin-bottom: 0px;
   margin-top: 0px;

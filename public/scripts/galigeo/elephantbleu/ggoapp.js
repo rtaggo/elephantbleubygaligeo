@@ -55,6 +55,7 @@
         setTimeout(function(e){
           $('#appLauncher').fadeOut(1000, function(e){
             console.log('fade out completed');
+            $('#appLauncher').remove();
             $('#mainAppContainer').removeClass('slds-hide');
             GGO.EventBus.dispatch(GGO.EVENTS.APPISREADY);
 
