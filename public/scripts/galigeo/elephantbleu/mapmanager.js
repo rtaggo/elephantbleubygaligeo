@@ -211,8 +211,8 @@
 		handleUserLocationError: function(e) {
       console.log('>> handleUserLocationError', e);
       this._userLocation.coordinates = {
-        lat: 48.8535356452292,
-        lng: 2.3482337594032288
+        lat: 48.673412,
+        lng: 7.783549
       };
       this._userLocation.accuracy = 1;
       if (!this._stationsFetched) {

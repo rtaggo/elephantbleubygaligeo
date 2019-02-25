@@ -154,7 +154,14 @@
 				});
 			}, 3000);
 */
-			self.galigeo = new GGO.GGOApp ();
+			var windowH = $(window).height();
+			$('body').css({
+				'height':  windowH+'px',
+				'max-height':  windowH+'px',
+			})
+			self.galigeo = new GGO.GGOApp ({
+				windowHeight: windowH
+			});
 		});
 	</script>
 	<!--

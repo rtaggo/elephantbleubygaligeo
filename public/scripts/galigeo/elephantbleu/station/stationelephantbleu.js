@@ -128,14 +128,85 @@
 
         var portiqueRow = $('<div class="slds-form__row"></div>')
           .append(this.getEditPortiqueFieldSet());
-
         editForm.append(portiqueRow);
+        
+        var diversRow = $('<div class="slds-form__row"></div>')
+          .append(this.getDiversFieldSet());
+        editForm.append(diversRow);
         var commentFormElt = $('<div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-form-element_1-col"></div>')
-          .append($('<label class="slds-form-element__label" for="comment_userinput">Commentaires</label>'))
+          .append($('<label class="slds-form-element__label" for="comment_userinput">Commentaire</label>'))
           .append($('<div class="slds-form-element__control"></div>')
             .append($('<textarea id="comment_userinput" class="slds-textarea" placeholder="Commentaire"></textarea>')));
         editForm.append(commentFormElt);
+        
+        var ancienneteFormElt = $('<div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-form-element_1-col"></div>')
+          .append($('<label class="slds-form-element__label" for="hp_anciennete" style="width:33%;">Ancienneté</label>'))
+          .append($('<div class="slds-form-element__control" style="width:66%;display:inline-block;"></div>')
+            .append($('<input type="number" id="hp_anciennete" placeholder="ancienneté" class="slds-input" />')));
+        editForm.append(ancienneteFormElt);
+       
+        var reseauxFormElt = $('<div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-form-element_1-col"></div>')
+        .append($('<label class="slds-form-element__label" style="width:33%;vertical-align:top;">Réseaux</label>'))
+        .append($('<div class="slds-form-element__control" style="width:66%;display:inline-block;"></div>')
+          .append($('<div class="slds-checkbox"></div>')
+            .append($('<input type="checkbox" name="reseaux" id="portique_reseaux-eau" value="Eau" />'))
+            .append($('<label class="slds-checkbox__label" for="portique_reseaux-eau"></label>')
+              .append($('<span class="slds-checkbox_faux"></span>'))
+              .append($('<span class="slds-form-element__label">Eau</span>'))
+            )
+          )
+          .append($('<div class="slds-checkbox"></div>')
+            .append($('<input type="checkbox" name="reseaux" id="portique_reseaux-gaz" value="Gaz" />'))
+            .append($('<label class="slds-checkbox__label" for="portique_reseaux-gaz"></label>')
+              .append($('<span class="slds-checkbox_faux"></span>'))
+              .append($('<span class="slds-form-element__label">Gaz</span>'))
+            )
+          )
+          .append($('<div class="slds-checkbox"></div>')
+            .append($('<input type="checkbox" name="reseaux" id="portique_reseaux-telephone" value="Téléphone" />'))
+            .append($('<label class="slds-checkbox__label" for="portique_reseaux-telephone"></label>')
+              .append($('<span class="slds-checkbox_faux"></span>'))
+              .append($('<span class="slds-form-element__label">Téléphone</span>'))
+            )
+          )
+          .append($('<div class="slds-checkbox"></div>')
+            .append($('<input type="checkbox" name="reseaux" id="portique_reseaux-electricite" value="Electricité" />'))
+            .append($('<label class="slds-checkbox__label" for="portique_reseaux-electricite"></label>')
+              .append($('<span class="slds-checkbox_faux"></span>'))
+              .append($('<span class="slds-form-element__label">Electricité</span>'))
+            )
+          )
+        );
+        editForm.append(reseauxFormElt);
+
         container.append(editForm);
+      },
+      getDiversFieldSet: function() {
+        var formItem = $('<div class="slds-form__item" role="listitem"></div');
+        var formFieldSet = $('<fieldset class="slds-form-element slds-form-element_compound slds-is-editing slds-form-element_stacked"></fieldset>');
+        formFieldSet.append($('<legend class="slds-form-element__legend slds-form-element__label">Services divers</label>'));
+        var formEltCtrl = $('<div class="slds-form-element__control"></div>');
+        var reseauxFormElt = $('<div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-form-element_1-col"></div>')
+        .append($('<label class="slds-form-element__label" style="width:33%;vertical-align:top;"></label>'))
+        .append($('<div class="slds-form-element__control" style="width:66%;display:inline-block;"></div>')
+          .append($('<div class="slds-checkbox"></div>')
+            .append($('<input type="checkbox" name="reseaux" id="CartePro" value="Yes" />'))
+            .append($('<label class="slds-checkbox__label" for="CartePro"></label>')
+              .append($('<span class="slds-checkbox_faux"></span>'))
+              .append($('<span class="slds-form-element__label">Carte Pro</span>'))
+            )
+          )
+          .append($('<div class="slds-checkbox"></div>')
+            .append($('<input type="checkbox" name="reseaux" id="gonfleur" value="yes" />'))
+            .append($('<label class="slds-checkbox__label" for="gonfleur"></label>')
+              .append($('<span class="slds-checkbox_faux"></span>'))
+              .append($('<span class="slds-form-element__label">Gonfleur</span>'))
+            )
+          ));
+        formEltCtrl.append(reseauxFormElt);
+        formFieldSet.append(formEltCtrl);
+        formItem.append(formFieldSet);
+        return formItem;
       },
       getEditHPFieldSet: function() {
         var formItem = $('<div class="slds-form__item" role="listitem"></div');
@@ -143,7 +214,7 @@
         formFieldSet.append($('<legend class="slds-form-element__legend slds-form-element__label">Haute Pression</label>'));
         var formEltCtrl = $('<div class="slds-form-element__control"></div>');
         var nbPisteFormElt = $('<div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-form-element_1-col"></div>')
-          .append($('<label class="slds-form-element__label" for="hp_nb_piste" style="width:33%;">Nombre de piste</label>'))
+          .append($('<label class="slds-form-element__label" for="hp_nb_piste" style="width:33%;">Nombre de piste(s)</label>'))
           .append($('<div class="slds-form-element__control" style="width:66%;display:inline-block;"></div>')
             .append($('<input type="number" id="hp_nb_piste" placeholder="#" class="slds-input" />').val(this._data.piste_hp)));
         var ancienneteFormElt = $('<div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-form-element_1-col"></div>')
@@ -203,10 +274,10 @@
             ));
 
         formEltCtrl.append(nbPisteFormElt)
-          .append(ancienneteFormElt)
-          .append(reseauxFormElt)
-          .append(pistePLFormElt)
-          .append(optionsFormElt);
+          //.append(ancienneteFormElt)
+          //.append(reseauxFormElt)
+          .append(pistePLFormElt);
+          //.append(optionsFormElt);
         formFieldSet.append(formEltCtrl);
         formItem.append(formFieldSet);
         return formItem;
@@ -217,7 +288,7 @@
         formFieldSet.append($('<legend class="slds-form-element__legend slds-form-element__label">Portique</label>'));
         var formEltCtrl = $('<div class="slds-form-element__control"></div>');
         var nbPisteFormElt = $('<div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-form-element_1-col"></div>')
-          .append($('<label class="slds-form-element__label" for="portique_nb_piste" style="width:33%;">Nombre de piste</label>'))
+          .append($('<label class="slds-form-element__label" for="portique_nb_piste" style="width:33%;">Nombre de piste(s)</label>'))
           .append($('<div class="slds-form-element__control" style="width:66%;display:inline-block;"></div>')
             .append($('<input type="number" id="portique_nb_piste" placeholder="#" class="slds-input" />').val(this._data.rouleau_lavage)));
         var ancienneteFormElt = $('<div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-form-element_1-col"></div>')
@@ -263,10 +334,10 @@
           .append($('<div class="slds-form-element__control" style="width:66%;display:inline-block;"></div>')
             .append($('<textarea id="portique_options" class="slds-textarea" placeholder="Options"></textarea>')
             ));
-        formEltCtrl.append(nbPisteFormElt)
-          .append(ancienneteFormElt)
-          .append(reseauxFormElt)
-          .append(optionsFormElt);
+        formEltCtrl.append(nbPisteFormElt);
+          //.append(ancienneteFormElt);
+          //.append(reseauxFormElt)
+          //.append(optionsFormElt);
         formFieldSet.append(formEltCtrl);
         formItem.append(formFieldSet);
         return formItem;
@@ -274,7 +345,7 @@
       getEditAddressFieldSet: function() {
         var formItem = $('<div class="slds-form__item" role="listitem"></div');
         var formFieldSet = $('<fieldset class="slds-form-element slds-form-element_compound slds-form-element_address slds-is-required slds-is-editing slds-form-element_stacked"></fieldset>');
-        formFieldSet.append($('<legend class="slds-form-element__legend slds-form-element__label">Adresse</label>'));
+        formFieldSet.append($('<legend class="slds-form-element__legend slds-form-element__label">Coordonnées</label>'));
         var formEltCtrl = $('<div class="slds-form-element__control"></div>');
         formEltCtrl
           .append($('<div class="slds-form-element__row"></div>')

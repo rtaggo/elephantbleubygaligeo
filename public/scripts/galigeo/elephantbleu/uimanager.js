@@ -15,9 +15,10 @@
 
   GGO.UIManager.prototype = {
     _init: function() {
+
       this._viewSize = {
         width: $(window).width(),
-        height: $(window).height()
+        height: this._options.windowHeight || $(window).height()
       };
       this._viewSize.halfHeight = (this._viewSize.height/2);
       this._viewSize.thirdHeight = (this._viewSize.height/3);
