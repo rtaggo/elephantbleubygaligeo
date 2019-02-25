@@ -36,7 +36,7 @@ router.get('/stations', (req, res, next) => {
     }));
     console.log(`Filtered has ${tstations.features.length} stations`);
     tstations.features.sort(function(a, b){
-      return (a.properties.distance < b.properties.distance);
+      return (a.properties.distance - b.properties.distance);
     });
     stations = tstations;
   }

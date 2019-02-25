@@ -27,9 +27,9 @@
     };
 
     this._defaultEBIcon = {
-			iconUrl: '/images/logo_elephantbleu.png',
-			iconSize: [32, 32], // size of the icon
-			iconAnchor: [16, 16], // point of the icon which will correspond to marker's location
+			iconUrl: '/images/elephant_marker.png',
+			iconSize: [32, 36], // size of the icon
+			iconAnchor: [16, 36], // point of the icon which will correspond to marker's location
 			popupAnchor: [0, -16], // point from which the popup should open relative to the iconAnchor
 			className: 'dot'
 		};
@@ -104,7 +104,7 @@
       this._stationLayers.elephantbleu.geojson = data.geojson;
       this._stationLayers.elephantbleu.layer.setGeoJSON(this._stationLayers.elephantbleu.geojson);
       this._stationLayers.elephantbleu.layer.eachLayer(function(lyr){
-        lyr.setIcon(L.icon(self._defaultIcon));
+        lyr.setIcon(L.icon(self._defaultEBIcon));
       });
       GGO.EventBus.dispatch(GGO.EVENTS.RENDERSTATIONS, data);
     }, 
