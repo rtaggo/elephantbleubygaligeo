@@ -22,6 +22,7 @@
           lng : parseFloat(search_params.get('lng')),
         }
       }
+      alert('userLocated: ' + modulesOptions.userLocated + '. User location: ' + JSON.stringify(modulesOptions.userLocation));
       this._uiManager = new GGO.UIManager(modulesOptions);
       this._mapManager = new GGO.MapManager(modulesOptions);
       this._dataManager = new GGO.DataManager(modulesOptions);
