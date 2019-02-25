@@ -109,7 +109,7 @@
               .append($('<div class="slds-form-element slds-form-element_stacked slds-is-editing"></div>')
                 .append($('<label class="slds-form-element__label" for="stacked-form-element-station-name">Station de lavage</label>'))
                 .append($('<div class="slds-form-element__control"></div>')
-                  .append($('<input type="text" id="stacked-form-element-station-name" readonly="" required="" class="slds-input" value="' + this.getTitle() + ' (' + this.getId() + ')" />'))
+                  .append($('<input type="text" id="stacked-form-element-station-name" readonly="" required="" class="slds-input" value="' + this.getTitle() + '" />'))
                 )
               )
               .append(imgSnapShotDiv)
