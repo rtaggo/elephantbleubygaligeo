@@ -152,3 +152,22 @@ body {
   bottom: 0;
   right: 0;
 }
+
+.station-edition_snapshotdiv {
+  line-height: 80px;
+  border: 1px solid #73cfff;
+  background-color: #EFEFEF;
+  width: 84px;
+  height: 84px;
+  position: absolute;
+  right: 15px;
+  text-align: center;
+}
+.station-edition_snapshotdiv svg, .station-edition_snapshotdiv img {
+  vertical-align: middle;
+  line-height: 80px;
+}
+.station-edition_snapshotdiv img {
+  max-height: 80px;
+  max-width: 80px;
+}

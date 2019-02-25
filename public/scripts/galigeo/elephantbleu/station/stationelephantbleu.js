@@ -3,6 +3,7 @@
     GGO.StationElephantBleu = function(data, coordinates) {
       this._data = data;
       this._coordinates = coordinates;
+      this._useBlob = false && window.URL; 		
     };
     GGO.StationElephantBleu.prototype = {
       getDetails: function(){
@@ -57,7 +58,7 @@
           servicesContent
             .append($('<div class="service-type"></div>')
               .append($('<img src="' + picto_aspi_src +'"/>'))
-              .append($('<div>' + this._data.aspirateur + ' Rouleau(x) de lavage</div>')));
+              .append($('<div>' + this._data.aspirateur + ' Aspirateur(s)</div>')));
           hasServices = true;
         }
         
@@ -67,7 +68,44 @@
         return content;
       },
       buildEditView: function(container) {
+        var self = this;
         var editForm = $('<div class="slds-form" role="list"></div>');
+        var imgSnapShotDiv = $('<div id="station_snapshot_div" class="station-edition_snapshotdiv"></div>');
+        imgSnapShotDiv
+          .append($('<svg class="slds-icon slds-icon_large slds-icon-text-default slds-shrink-none" aria-hidden="true"><use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#photo"></use></svg>'));
+
+        imgSnapShotDiv.click(function(e){
+          self._imgInput.trigger('click');
+        });
+        this._imgInput = $('<input type="file" accept="image/*" style="display:none;">')
+          .on('change', function(e){
+            console.log('input file changed');
+            var files = this.files, errors = "";
+
+            if (!files) {
+              errors += "File upload not supported by your browser.";
+            }
+
+            if (files && files[0]) {
+              for(var i=0; i<files.length; i++) {
+                var file = files[i];
+                if ( (/\.(png|jpeg|jpg|gif)$/i).test(file.name) ) {
+                  self.readImage( file ); 
+                } else {
+                  errors += file.name +" Unsupported Image extension\n";  
+                }
+              }
+            }
+
+            // Handle errors
+            if (errors) {
+              //self._traceDivCtnr.append($('<p></p>').text(errors));
+              alert(errors);
+            }
+
+          });
+
+        //imgSnapShotDiv.append(this._imgInput);
         editForm
           .append($('<div class="slds-form__row"></div>')
             .append($('<div class="slds-form__item" role="listitem"></div>')
@@ -75,7 +113,11 @@
                 .append($('<label class="slds-form-element__label" for="stacked-form-element-station-name">Station de lavage</label>'))
                 .append($('<div class="slds-form-element__control"></div>')
                   .append($('<input type="text" id="stacked-form-element-station-name" readonly="" required="" class="slds-input" value="' + this.getTitle() + ' (' + this.getId() + ')" />'))
-                ))));
+                )
+              )
+              .append(imgSnapShotDiv)
+            )
+          );
         
         var addrRow = $('<div class="slds-form__row"></div>')
           .append(this.getEditAddressFieldSet());
@@ -91,7 +133,11 @@
           .append(this.getEditPortiqueFieldSet());
 
         editForm.append(portiqueRow);
-
+        var commentFormElt = $('<div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-form-element_1-col"></div>')
+          .append($('<label class="slds-form-element__label" for="comment_userinput">Commentaires</label>'))
+          .append($('<div class="slds-form-element__control"></div>')
+            .append($('<textarea id="comment_userinput" class="slds-textarea" placeholder="Commentaire"></textarea>')));
+        editForm.append(commentFormElt);
         container.append(editForm);
       },
       getEditHPFieldSet: function() {
@@ -154,8 +200,8 @@
           );
 
         var optionsFormElt = $('<div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-form-element_1-col"></div>')
-          .append($('<label class="slds-form-element__label" for="hp_options">Options</label>'))
-          .append($('<div class="slds-form-element__control"></div>')
+          .append($('<label class="slds-form-element__label" for="hp_options" style="width:33%;vertical-align:top;">Options</label>'))
+          .append($('<div class="slds-form-element__control" style="width:66%;display:inline-block;"></div>')
             .append($('<textarea id="hp_options" class="slds-textarea" placeholder="Options ..."></textarea>')
             ));
 
@@ -216,8 +262,8 @@
           );
 
         var optionsFormElt = $('<div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-form-element_1-col"></div>')
-          .append($('<label class="slds-form-element__label" for="portique_options">Options</label>'))
-          .append($('<div class="slds-form-element__control"></div>')
+          .append($('<label class="slds-form-element__label" for="portique_options" style="width:33%;vertical-align:top;">Options</label>'))
+          .append($('<div class="slds-form-element__control" style="width:66%;display:inline-block;"></div>')
             .append($('<textarea id="portique_options" class="slds-textarea" placeholder="Options"></textarea>')
             ));
         formEltCtrl.append(nbPisteFormElt)
@@ -319,7 +365,7 @@
           servicesContent
             .append($('<div class="service-type"></div>')
               .append($('<img src="' + picto_aspi_src +'"/>'))
-              .append($('<div>' + this._data.aspirateur + ' Rouleau(x) de lavage</div>')));
+              .append($('<div>' + this._data.aspirateur + ' Aspirateur(s)</div>')));
           hasServices = true;
         }
 
@@ -340,7 +386,32 @@
       },
       getTitle: function(){
         return this._data.nom;
-      }
+      },
+      readImage: function (file) {
+        var self = this;
+        var reader = new FileReader();
+        var elPreview = $('#station_snapshot_div').empty();
+        reader.addEventListener("load", function () {
+          var image  = new Image();
+  
+          image.addEventListener("load", function () {
+            var imageInfo = file.name +' '+ image.width +'×'+ image.height +' '+ file.type +' '+ Math.round(file.size/1024) +'KB';
+  
+            // Show image and info
+            elPreview.append( this );
+            //elPreview.prepend($('<p></p>').text(imageInfo).addClass('imageInfo'));
+  
+            if (self._useBlob) {
+              // Free some memory
+              window.URL.revokeObjectURL(image.src);
+            }
+          });
+          image.src = self._useBlob ? window.URL.createObjectURL(file) : reader.result;
+        });
+  
+        reader.readAsDataURL(file);  
+      },
+      
     };
     GGO.StationElephantBleu.prototype = $.extend(true, {}, GGO.Station.prototype, GGO.StationElephantBleu.prototype);
   })();
