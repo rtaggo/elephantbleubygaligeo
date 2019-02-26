@@ -71,6 +71,10 @@ body {
   padding: 0px;
 }
 
+#dataExplorerCard .slds-card__body_inner{
+  padding: 0 0.5rem;
+}
+
 #locateUserIcon {
   /*background-color: white; */
 }
@@ -125,6 +129,10 @@ body {
 
 .layer_details.selected img {
   border: 2px solid #73cfff;
+}
+
+#elephantbleuStations_Container .slds-item {
+  padding: 0.25rem;
 }
 
 .slds-item.selected {
