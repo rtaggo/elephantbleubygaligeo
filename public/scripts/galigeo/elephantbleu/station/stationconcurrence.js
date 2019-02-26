@@ -13,7 +13,8 @@
         var content = $('<div data-stationid="'+this._data.id+'" data-layertype="concurrence"></div>');
         content
           .append($('<div class="station-title_container" data-stationid="'+this._data.id+'" data-layertype="concurrence"></div>')
-            .append($('<span class="station-title" data-stationid="'+this._data.id+'" data-layertype="concurrence"></span>').text('Station ' + this._data.nom))
+          .append($('<span class="station-icon"></span>').append($('<img src="/images/pictos/picto_concurrence.png" />')))
+          .append($('<span class="station-title" data-stationid="'+this._data.id+'" data-layertype="concurrence"></span>').text('Station ' + this._data.nom))
             .append($('<span class="station-distance"></span>').text(GGO.formatDistance(this._data.distance)))
             .append($('<svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-left_small slds-shrink-none" aria-hidden="true" data-stationid="'+this._data.id+'" data-layertype="concurrence"><use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#chevronright"></use></svg>')));
         var hasServices = false;            

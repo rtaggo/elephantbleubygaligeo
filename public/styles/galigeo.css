@@ -55,6 +55,9 @@ body {
   padding-top: 0px;
 }
 
+#layerSwitcherCard {
+  margin-top: 0px !important;
+}
 #layerSwitcherCard .slds-card__body{
   position: absolute;
     left: 5px;
@@ -73,7 +76,7 @@ body {
 }
 
 #locateUserIcon svg{
-  transform: rotate(-30deg);
+/*  transform: rotate(-30deg); */
 }
 
 .userLocationMarker {
@@ -128,13 +131,32 @@ body {
   border: 1px solid #73cfff !important;
 }
 
+.station-title_container {
+  position: relative;
+}
+
+.station-title_container .station-title {
+  margin-left: 25px;
+}
+
+.station-title_container .station-icon {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 20px;
+  height: 20px;
+}
+
 .station-title_container .station-distance {
   font-size: 9px;
-  margin-left : 10px;
+  margin-left : 5px;
+  display: block;
 }
 
 .station-title_container svg {
-  float: right;
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
 
 .service-type {
